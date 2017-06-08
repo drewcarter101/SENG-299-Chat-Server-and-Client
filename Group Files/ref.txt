@@ -1,0 +1,28 @@
+/help
+/join [chatroom_name]
+/create [chatroom_name]
+/set_alias [alias]
+/block [user_alias]
+/unblock [user_alias]
+/delete [chatroom_name]
+/quit
+
+ 
+/b
+b/
+/i
+i/
+/u
+u/
+/h
+h/
+
+
+ 
+/happy
+/sad
+/angry
+/bored
+/thumbsup
+/thumbsdown
+/highfive
