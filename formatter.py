@@ -5,26 +5,26 @@ import re
 import json
 
 class ParseMessage():
+
     def send_command(self, commands, user_data):
         commands=list(filter(None, commands))
         data = {}
+        data["type"]="command"
         data["command"] = commands[0]
         if len(commands)>1: data["value"]=commands[1]
         data["user"] = user_data["username"]
         data["password"] = user_data["password"]
         json_data = json.dumps(data)
-        info = json.loads(json_data) #to load json
-        print(info) #to access loaded json
+        return json_data
 
     def send_message(self, message, user_data):
         data = {}
+        data["type"]="normal"
         data["message"] = message
         data["user"] = user_data["username"]
         data["password"] = user_data["password"]
         json_data = json.dumps(data)
-        info = json.loads(json_data) #to load json
-        #print(info["message"]) #to access loaded json
-        print(info) #to access loaded json
+        return json_data
 
     def __init__(self, input_list, user_data):
         chatroom_commands =["join","create","set_alias","block", "unblock", "delete", "help", "quit"]
@@ -39,15 +39,19 @@ class ParseMessage():
 
         
         if command_input is not None:
-            self.send_command([command_input.group(1), command_input.group(2), command_input.group(3)], user_data)
+            self.output=self.send_command([command_input.group(1), command_input.group(2), command_input.group(3)], user_data)
         else:
-            self.send_message(input, user_data)
+            self.output= self.send_message(input, user_data)
+
+    def to_json(self):
+        return self.output
 
 
 
 input_list=sys.argv[1:]
 user_d={"username":"Jeff", "password": "turtles"}
-ParseMessage(input_list, user_d)
+output= json.loads(ParseMessage(input_list, user_d).to_json())
+print(output)
 
 
 
