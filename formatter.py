@@ -9,7 +9,7 @@ class ParseMessage():
         commands=list(filter(None, commands))
         data = {}
         data["command"] = commands[0]
-        if len(commands)>1: data["names"]=commands[1]
+        if len(commands)>1: data["value"]=commands[1]
         data["user"] = user_data["username"]
         data["password"] = user_data["password"]
         json_data = json.dumps(data)
