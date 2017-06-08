@@ -11,7 +11,7 @@ chatroom_commands =["join","create","set_alias","block", "unblock", "delete", "h
 input_list=sys.argv[1:]
 input=",".join(input_list)
 
-formats={"/b":"", "b/": " ", "/i": " ", "i/": " ", "/u": " ", "u/": " ", "/h": " ", "h/": " ", "/highfive": u'\U000270B'}
+formats={"/b":"", "b/": " ", "/i": " ", "i/": " ", "/u": " ", "u/": " ", "/h": " ", "h/": " ", "/happy": u'\U0001f604', "/sad": u'\U0001F622', "/angry": u'\U0001F620', "/bored": u'\U0001F634', "/thumbsup": u'\U0001F44D', "/thumbsdown": u'\U0001F44E', "/highfive": u'\U000270B'}
 
 pattern1="/(?:({}))\[([A-Za-z0-9_]+)\]".format("|".join(chatroom_commands))
 pattern2="/(?:({}))".format("|".join(chatroom_commands[6:]))
