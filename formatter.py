@@ -47,10 +47,6 @@ class ParseMessage():
 
 input_list=sys.argv[1:]
 user_d={"username":"Jeff", "password": "turtles"}
-#user_d={}
-#user_d["username"]="Jeff"
-#user_d["password"]="turtles"
-
 ParseMessage(input_list, user_d)
 
 
