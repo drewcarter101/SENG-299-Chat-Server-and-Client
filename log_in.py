@@ -8,7 +8,7 @@ import re
 
 con=MySQLdb.connect(
     user ="root",
-    passwd= "yunnanshengmangshimangshidajie23-1hao",
+    passwd= "WWWWWWWWWW",
     host= "localhost",
     db= "log_in_sys" )
 cur =con.cursor()
