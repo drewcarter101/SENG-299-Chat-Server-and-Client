@@ -4,15 +4,13 @@ import sys
 import re
 
 
-
-
 con=MySQLdb.connect(
     user ="root",
-    passwd= "WWWWWWWWWW",
+    passwd= "wwwwwwwwwww",
     host= "localhost",
     db= "log_in_sys" )
 cur =con.cursor()
-username =""
+
 
 
 def sign_up(username,password):
@@ -23,14 +21,17 @@ def signup_or_login(username,password):
     cur.execute("SELECT * FROM log_in WHERE username=%s and password=%s",(username,password))
     found =cur.fetchone()
     if (found):
-        print "user exists!"        
-    else:
-       
-        sign_up(username,password)
+        print "log in successful!"    
+    else:  
+        signUP= raw_input('do you want to sign up?[Y or N]: ')
+        if (signUP=="Y"):   
+            username=input_name() 
+            password= raw_input('password: ')
+            sign_up(username,password)
+            print "^.^ Welcom new user!"
           
 
 def validate_name(username):
-    #if username
     cur.execute("SELECT * FROM log_in")
     rows=cur.fetchall()
     for row in rows:
@@ -52,11 +53,12 @@ def input_name():
    
 
 def main():
-    username=input_name()
+    username= raw_input('username: ') 
     password=raw_input('password: ')
-    signup_or_login(username , password)        
+    signup_or_login(username , password)       
     con.commit()
     con.close()
+
 
 if __name__== "__main__":
     main()
