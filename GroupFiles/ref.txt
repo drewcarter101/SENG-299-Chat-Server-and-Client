@@ -27,3 +27,6 @@ h/
 /thumbsup
 /thumbsdown
 /highfive
+
+
+Help:
