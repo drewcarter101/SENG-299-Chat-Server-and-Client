@@ -7,33 +7,28 @@ from formatter import InpuHandler
 
 
 credentials={}
-newUser=False
-credential_errors={"invalid_username": "Username must...", "invalid password": "Password must be...", "Invalid pairing": "The password entered does not match the username"}#fill in later
+firstTry=True
+credential_errors={"InvalidUsername": "Username must...", "InvalidPassword": "Password must be...", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username"}#fill in later
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
     helpText=myfile.read()
 
-def usernameValid(username):
-    #fill in later
-    return True
-
-def usernameExists(username):
-    data={"type":"login", "function": "validate_name({})".format(username)} #called in server by valid=eval(data["function"]), valid is what is returned, I know eval is kinda bad
+def sign_up(username,password):
+    data={"type":"db_command", "ID": "signup", "username": username, "password": password }
     json_data = json.dumps(data)
     #send json_data to server
     #wait for response, return response
-    return True
+    return "test"
 
-def passwordValid(password):
-    #fill in later
-    return True
+def login(username,password):
+    data={"type":"db_command", "ID": "login", "username": username, "password": password }
+    json_data = json.dumps(data)
+    #send json_data to server
+    #wait for response, return response
+    return "Ok"
 
-def passwordMatch(username, password):
-    #need method in login
-    return True
-
-def sign_up(username,password):
-    data={"type":"login", "function": "sign_up({},{})".format(username, password)}
+def set_alias(username, password, newUsername):
+    data={"type":"db_command", "ID": "set_alias", "username": username, "password": password, "newUsername": newUsername }
     json_data = json.dumps(data)
     #send json_data to server
     #wait for response, return response
@@ -41,7 +36,10 @@ def sign_up(username,password):
 
 def peformAction(command, value):
     if command=="set_alias":
-        credentials["username"]=value  
+        tempUser=  raw_input("please re-enter your username: \n")
+        tempPass=  raw_input("please re-enter your password: \n")
+        tempNewUser=  raw_input("please enter your new username: \n")
+        set_alias(tempUser, tempPass, tempNewUser)
     elif command== "help":
         print helpText
     elif command =="quit":
@@ -52,42 +50,23 @@ def peformAction(command, value):
 #Prompt user for username
 print "Welcome"
 while True:
-    tempUser = raw_input("Please enter your chosen username: \n\n")#wait for user to enter username
-    if usernameValid(tempUser):#check if user name is valid, if not valid start loop again
-        if usernameExists(tempUser):#check if username exists in database
-            credentials["username"]=tempUser #if it exists, set username
-            break  #stops the loop
-        else:#if it doesn't exist
-            print "Username does not exist"
-            response = raw_input("Type 's' to signup, press any key to try again\n\n")
-            if response == "s":
-                print "Beginning sign up process..."
-                newUser=True
-                credentials["username"]=tempUser
-                break
-    else:
-        print credential_errors["invalid_username"]
-
-#Check password
-while True:
-    tempPass = raw_input("please enter your password: " + credential_errors["invalid password"]+ "\n\n")
-    if passwordValid(tempPass):
-        if newUser:
-            credentials["password"]=tempPass
-            sign_up(credentials["username"], credentials["password"])
-            print "Sign up complete! You are now logged in"
-            break
-        else:
-            #Check if password matches username
-            if passwordMatch(credentials["username"], tempPass):
-                credentials["password"]=tempPass
-                print "You are now logged in"
+    tempUser=raw_input("please enter a username: " + credential_errors["InvalidUsername"]+ "\n")
+    tempPass=raw_input("please enter your password: " + credential_errors["InvalidPassword"]+ "\n")
+    if login(tempUser, tempPass) and firstTry == "Ok":
+        print "Login complete!"
+        break
+    elif login(tempUser, tempPass) == "InvalidCredentials":
+        if firstTry: print credential_errors["Invalid_pairing"]
+        response= raw_input("Press 's' to sign up as a new user or press any key to retry login\n")
+        if response== 's':
+            firstTry=False
+            print "Beginnng sign up process..."
+            if sign_up(tempUser, tempPass)=="Ok":
+                print "Sign up complete, you are now logged in"
                 break
             else:
-                print credential_errors["Invalid pairing"]
-    else:
-        print tempPass + " is not a valid password"
-  
+                print credential_errors[sign_up(tempUser, tempPass)]
+
 print "What do you want to do now?"
 while True: #Main Program loop
     input_list= raw_input()
