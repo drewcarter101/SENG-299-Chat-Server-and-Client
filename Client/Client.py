@@ -95,5 +95,6 @@ while True: #Main Program loop
     output= json.loads(parser.to_json())
     if output["type"]=="client_command":
         peformAction(output["command"], output["value"])
+    #else send output to server to decide what to do next
     print(output)
     break
