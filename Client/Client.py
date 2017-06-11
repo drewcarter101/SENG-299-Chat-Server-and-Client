@@ -18,7 +18,7 @@ def usernameValid(username):
     return True
 
 def usernameExists(username):
-    data={"function": "validate_name({})".format(username)} #called in server by valid=eval(data["function"]), valid is what is returned, I know eval is kinda bad
+    data={"type":"login", "function": "validate_name({})".format(username)} #called in server by valid=eval(data["function"]), valid is what is returned, I know eval is kinda bad
     json_data = json.dumps(data)
     #send json_data to server
     #wait for response, return response
@@ -33,7 +33,7 @@ def passwordMatch(username, password):
     return True
 
 def sign_up(username,password):
-    data={"function": "sign_up({},{})".format(username, password)}
+    data={"type":"login", "function": "sign_up({},{})".format(username, password)}
     json_data = json.dumps(data)
     #send json_data to server
     #wait for response, return response
@@ -97,4 +97,3 @@ while True: #Main Program loop
         peformAction(output["command"], output["value"])
     #else send output to server to decide what to do next
     print(output)
-    break
