@@ -88,9 +88,9 @@ while True:
     else:
         print tempPass + " is not a valid password"
   
-
+print "What do you want to do now?"
 while True: #Main Program loop
-    input_list= raw_input("What do you want to do now?\n\n")
+    input_list= raw_input()
     parser=InpuHandler(input_list.split(" "), credentials)
     output= json.loads(parser.to_json())
     if output["type"]=="client_command":
