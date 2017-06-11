@@ -3,7 +3,7 @@ import sys
 import os
 import re
 import json
-from formatter import ParseMessage
+from formatter import InpuHandler
 
 
 credentials={}
@@ -91,7 +91,7 @@ while True:
 
 while True: #Main Program loop
     input_list= raw_input("What do you want to do now?\n\n")
-    parser=ParseMessage(input_list.split(" "), credentials)
+    parser=InpuHandler(input_list.split(" "), credentials)
     output= json.loads(parser.to_json())
     if output["type"]=="client_command":
         peformAction(output["command"], output["value"])

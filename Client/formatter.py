@@ -4,7 +4,7 @@ import sys
 import re
 import json
 
-class ParseMessage():
+class InpuHandler():
 
     def send_command(self, commands, user_data):
         commands=list(filter(None, commands))
