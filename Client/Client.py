@@ -14,20 +14,30 @@ with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
     helpText=myfile.read()
 
 def usernameValid(username):
-    #check if username is valid, return True or False
+    #fill in later
     return True
-    #Sharon: I'll fill this in later
 
 def usernameExists(username):
-    #check if username exists, return True or False
+    data={"function": "validate_name({})".format(username)} #called in server by valid=eval(data["function"]), valid is what is returned, I know eval is kinda bad
+    json_data = json.dumps(data)
+    #send json_data to server
+    #wait for response, return response
     return True
-    #return Log_in.checkIfUsernameExists(username)
 
 def passwordValid(password):
+    #fill in later
     return True
 
 def passwordMatch(username, password):
+    #need method in login
     return True
+
+def sign_up(username,password):
+    data={"function": "sign_up({},{})".format(username, password)}
+    json_data = json.dumps(data)
+    #send json_data to server
+    #wait for response, return response
+    return
 
 def peformAction(command, value):
     if command=="set_alias":
@@ -38,7 +48,7 @@ def peformAction(command, value):
         sys.exit()
     return
 
-#sys.argv[1]
+
 #Prompt user for username
 print "Welcome"
 while True:
@@ -53,7 +63,7 @@ while True:
             if response == "s":
                 print "Beginning sign up process..."
                 newUser=True
-                #signup user
+                credentials["username"]=tempUser
                 break
     else:
         print credential_errors["invalid_username"]
@@ -64,7 +74,7 @@ while True:
     if passwordValid(tempPass):
         if newUser:
             credentials["password"]=tempPass
-            #Enter new user into database
+            sign_up(credentials["username"], credentials["password"])
             print "Sign up complete! You are now logged in"
             break
         else:
