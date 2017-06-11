@@ -14,11 +14,14 @@ with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
     helpText=myfile.read()
 
 def usernameValid(username):
-    #fill in later
+    data={"type":"login_command", "function": "validate_nameFormat({})".format(username)} #called in server by valid=eval(data["function"]), valid is what is returned, I know eval is kinda bad
+    json_data = json.dumps(data)
+    #send json_data to server
+    #wait for response, return response
     return True
 
 def usernameExists(username):
-    data={"type":"login", "function": "validate_name({})".format(username)} #called in server by valid=eval(data["function"]), valid is what is returned, I know eval is kinda bad
+    data={"type":"login_command", "function": "validate_name({})".format(username)} #called in server by valid=eval(data["function"]), valid is what is returned, I know eval is kinda bad
     json_data = json.dumps(data)
     #send json_data to server
     #wait for response, return response
@@ -33,7 +36,7 @@ def passwordMatch(username, password):
     return True
 
 def sign_up(username,password):
-    data={"type":"login", "function": "sign_up({},{})".format(username, password)}
+    data={"type":"login_command", "function": "sign_up({},{})".format(username, password)}
     json_data = json.dumps(data)
     #send json_data to server
     #wait for response, return response
@@ -55,8 +58,10 @@ while True:
     tempUser = raw_input("Please enter your chosen username: \n\n")#wait for user to enter username
     if usernameValid(tempUser):#check if user name is valid, if not valid start loop again
         if usernameExists(tempUser):#check if username exists in database
-            credentials["username"]=tempUser #if it exists, set username
-            break  #stops the loop
+            response = raw_input("Type 'y' to confirm username as{}, type anything else to re-enter: \n\n".format(tempUser))
+            if response == "y":    
+                credentials["username"]=tempUser #if it exists, set username
+                break  #stops the loop
         else:#if it doesn't exist
             print "Username does not exist"
             response = raw_input("Type 's' to signup, press any key to try again\n\n")
