@@ -7,6 +7,7 @@ from formatter import InpuHandler
 
 
 credentials={}
+messages={}
 notTryingSignUp=True
 credential_errors={"InvalidUsername": "Username must...", "InvalidPassword": "Password must be...", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username"}#fill in later
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -50,7 +51,7 @@ def peformAction(command, value):
 
 
 #Prompt user for username
-print "Welcome"
+print "Welcome!"
 while True:
     tempUser=raw_input("please enter a username: " + credential_errors["InvalidUsername"]+ "\n")
     if tempUser=="/quit":
@@ -90,4 +91,19 @@ while True: #Main Program loop
         print output["message"]
     else:
         #else send output to server to decide what to do next
+        #server_Send(output)
+        #result=json.loads(server.recieve())
+        #if result["requestType"]=="normal":
+            #add result["message"] to list of messages:
+            #messages[result["message"] ]="unseen"
+        #else:
+            #print errors[result["message"]]
         print(output["message"])
+    #result=json.loads(server.recieve())
+    #if result["requestType"]=="normal":
+        #add result["message"] to list of messages:
+        #messages[result["message"] ]="unseen"
+    #for key, value in messages.iteritems() :
+        #if value=="unseen":
+            #print key
+            #value="seen"
