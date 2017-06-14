@@ -37,7 +37,7 @@ def set_alias(username, password, newUsername):
     #send json_data to server
     #wait for response, return response
     #   if succesful credential["username"]=value
-    return "Name succesfully changed!"
+    return "Name succesfully changed!\n"
 
 def peformAction(command, value):
     if command=="set_alias":
