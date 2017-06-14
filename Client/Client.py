@@ -16,34 +16,32 @@ with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
 def sign_up(username,password):
     if "/quit" in [username, password]:
         sys.exit()
-    data={"requestType":"db_command", "ID": "signup", "username": username, "password": password }
+    data={"requestType": "signup", "username": username, "password": password }
     json_data = json.dumps(data)
     #send json_data to server
     #wait for response, return response
-    return "DuplicateUsername"
+    return "Ok"
 
 def login(username,password):
     if "/quit" in [username, password]:
         sys.exit()
-    data={"requestType":"db_command", "ID": "login", "username": username, "password": password }
+    data={"requestType": "login", "username": username, "password": password }
     json_data = json.dumps(data)
     #send json_data to server
     #wait for response, return response
-    return "InvalidCredentials"
+    return "Ok"
 
 def set_alias(username, password, newUsername):
-    data={"requestType":"db_command", "ID": "set_alias", "username": username, "password": password, "newUsername": newUsername }
+    data={"requestType": "set_alias", "username": username, "password": password, "newUsername": newUsername }
     json_data = json.dumps(data)
     #send json_data to server
     #wait for response, return response
-    return
+    #   if succesful credential["username"]=value
+    return "Name succesfully changed!"
 
 def peformAction(command, value):
     if command=="set_alias":
-        tempUser=  raw_input("please re-enter your username: \n")
-        tempPass=  raw_input("please re-enter your password: \n")
-        tempNewUser=  raw_input("please enter your new username: \n")
-        set_alias(tempUser, tempPass, tempNewUser)
+        print set_alias(credentials["username"], credentials["password"], value)
     elif command== "help":
         print helpText
     elif command =="quit":
@@ -90,5 +88,6 @@ while True: #Main Program loop
         peformAction(output["command"], output["value"])
     elif output["requestType"]=="error":
         print output["message"]
-    #else send output to server to decide what to do next
-    print(output)
+    else:
+        #else send output to server to decide what to do next
+        print(output["message"])
