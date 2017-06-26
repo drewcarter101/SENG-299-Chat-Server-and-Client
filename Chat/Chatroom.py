@@ -2,9 +2,10 @@
 
 import time
 
+
 class Chatroom:
 
-    def __int__(self, name, owner):
+    def __init__(self, name, owner):
         self.name = name
         self.owner = owner
         self.bannedUsers = {}
@@ -12,20 +13,20 @@ class Chatroom:
 
     def addMessage(self, message):
         self.__assertUnbanned(message.userID)
-        messages.append(message)
+        self.messages.append(message)
 
-    def getMessagesByTime(self, time):
-        self.__assertUnbanned(message.userID)
-        if len(message) <= 0:
-            return []
-        index = self.__binarySearch(time, 0, len(messages) - 1) + 1
+    def getMessagesByTime(self, time, userID):
+        self.__assertUnbanned(userID)
+        if len(self.messages) <= 0:
+            return (-1, [])
+        index = self.__binarySearch(time, 0, len(self.messages) - 1)
 
         if index < 0:
-            return (len(messages) - 1, messages)
-        elif index >= len(messages):
-            return (len(messages) - 1, [])
+            return (len(self.messages) - 1, self.messages)
+        elif index >= len(self.messages):
+            return (len(self.messages) - 1, [])
         else:
-            return (len(messages) - 1, messages[index:])
+            return (len(self.messages) - 1, self.messages[index:])
 
     #binary search method for finding all messages that occur after and including the time specified
     #returns the first index with a message that has time >= to the time
@@ -35,26 +36,30 @@ class Chatroom:
 
         mid = (start + end) // 2
 
-        diff = messages[mid].time - time
+        diff = self.messages[mid].time - time
 
-        if diff < 0:
+        if diff > 0:
             return self.__binarySearch(time, start, mid - 1)
-        elif dif == 0:
+        elif diff == 0:
             return start
         else:
             return self.__binarySearch(time, mid + 1, end)
 
-    def getMessagesByIndex(self, start):
-        self.__assertUnbanned(message.userID)
+    def getMessagesByIndex(self, start, userID):
+        self.__assertUnbanned(userID)
         if start < 0:
-            return messages
-        elif len(message < 1):
+            return self.messages
+        elif len(self.messages) < 1 or start >= len(self.messages):
             return []
         else:
-            return messages[start+1:]
+            return self.messages[start+1:]
 
     def banUser(self, owner, userID):
         self.__assertOwner(owner)
+
+        if owner == userID:
+            raise UserIsOwnerException
+
         self.__banUser(userID)
 
     def unbanUser(self, owner, userID):
@@ -69,10 +74,10 @@ class Chatroom:
         try:
             return self.bannedUsers[userID]
         except KeyError:
-            return false
+            return False
 
     def __banUser(self, userID):
-        self.bannedUsers[userID] = true
+        self.bannedUsers[userID] = True
 
     def __unbanUser(self, userID):
         try:
@@ -97,4 +102,7 @@ class UserBannedException:
     pass
 
 class UserNotBannedException:
+    pass
+
+class UserIsOwnerException:
     pass
