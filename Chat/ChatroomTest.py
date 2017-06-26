@@ -79,13 +79,15 @@ class ChatroomTest(unittest.TestCase):
         chatroom.addMessage(message4)
         chatroom.addMessage(message5)
 
+        #Get from middle of list
         messages = chatroom.getMessagesByIndex(2, user)
-
         self.assertMessageListEquals(messages,[message3, message4, message5])
 
+        #Get from end of list
         messages = chatroom.getMessagesByIndex(5, user)
         self.assertMessageListEquals(messages, [])
 
+        #Get from beyond end of list
         messages = chatroom.getMessagesByIndex(6, user)
         self.assertMessageListEquals(messages, [])
 
@@ -102,11 +104,13 @@ class ChatroomTest(unittest.TestCase):
 
         chatroom = Chatroom(roomName, owner)
 
+        # populate message list
         for message in messages:
             chatroom.addMessage(message)
 
         chatroom.banUser(owner, user)
 
+        #Get Messages should fail
         try:
             messages = chatroom.getMessagesByTime(messageTime + 50, user)
             self.fail()
@@ -126,25 +130,31 @@ class ChatroomTest(unittest.TestCase):
 
         chatroom = Chatroom(roomName, owner)
 
+        #populate message list
         for message in messages:
             chatroom.addMessage(message)
 
+        #Get from before list
         receivedMessages = chatroom.getMessagesByTime(messageTime - 1, user)
         self.assertMessageListEquals(receivedMessages[1], messages)
         self.assertEqual(receivedMessages[0], 99)
 
+        #Get with time = first time
         receivedMessages = chatroom.getMessagesByTime(messageTime, user)
         self.assertMessageListEquals(receivedMessages[1], messages)
         self.assertEqual(receivedMessages[0], 99)
 
+        #Get from middle of list
         receivedMessages = chatroom.getMessagesByTime(messageTime + 50, user)
         self.assertMessageListEquals(receivedMessages[1], messages[50:])
         self.assertEqual(receivedMessages[0], 99)
 
+        #Get from end of list
         receivedMessages = chatroom.getMessagesByTime(messageTime + 99, user)
         self.assertMessageListEquals(receivedMessages[1], messages[-1:])
         self.assertEqual(receivedMessages[0], 99)
 
+        #Get from beyond end of list
         receivedMessages = chatroom.getMessagesByTime(messageTime + 100, user)
         self.assertMessageListEquals(receivedMessages[1], [])
         self.assertEqual(receivedMessages[0], 99)
@@ -198,6 +208,7 @@ class ChatroomTest(unittest.TestCase):
         chatroom.addMessage(message)
         chatroom.banUser(owner, user)
 
+        #Should not be able to ban the owner of the chatroom
         try:
             messages = chatroom.getMessagesByIndex(-1, user)
             self.fail()
@@ -220,6 +231,7 @@ class ChatroomTest(unittest.TestCase):
 
         self.assertMessageListEquals(messages, [Message(owner, messageText, messageTime)])
 
+        #Only owner should be able to ban users
         try:
             chatroom.banUser(user1, user2)
             self.fail()
@@ -333,6 +345,7 @@ class ChatroomTest(unittest.TestCase):
         except UserBannedException:
             pass
 
+    #Helper method, checks that 2 message lists are the same
     def assertMessageListEquals(self, left, right):
         if len(left) != len(right):
             self.assertEqual(len(left),len(right))
