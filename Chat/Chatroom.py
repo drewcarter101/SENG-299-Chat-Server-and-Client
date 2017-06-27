@@ -1,8 +1,5 @@
 # Created by Cam Southcott
 
-import time
-
-
 class Chatroom:
 
     def __init__(self, name, owner):
