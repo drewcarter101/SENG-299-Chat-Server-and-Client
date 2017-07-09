@@ -84,7 +84,7 @@ class Chatroom:
 
     #Makes sure the user attampting a method that requires owner permissions is the owner of this chatroom
     def __assertOwner(self, owner):
-        if owner != self.owner:
+        if self.owner is None or owner != self.owner:
             raise NotOwnerException
 
     #Makes sure the user attempting a method on this chatroom is not banned

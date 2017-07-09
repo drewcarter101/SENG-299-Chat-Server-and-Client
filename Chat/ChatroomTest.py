@@ -345,6 +345,18 @@ class ChatroomTest(unittest.TestCase):
         except UserBannedException:
             pass
 
+    def testNoOwner(self):
+        owner = None
+        user = 1234
+        roomName = "general"
+        chatroom = Chatroom(roomName, owner)
+
+        try:
+            chatroom.banUser(owner, user)
+            self.fail()
+        except NotOwnerException:
+            pass
+
     #Helper method, checks that 2 message lists are the same
     def assertMessageListEquals(self, left, right):
         if len(left) != len(right):

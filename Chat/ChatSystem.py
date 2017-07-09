@@ -6,7 +6,7 @@ from Chatroom import *
 class ChatSystem:
     DEFAULT_CHATROOM = "general"
     def __init__(self):
-        self.chatrooms = {DEFAULT_CHATROOM:Chatroom(DEFAULT_CHATROOM,-1)}
+        self.chatrooms = {self.DEFAULT_CHATROOM : Chatroom(self.DEFAULT_CHATROOM,None)}
         #get DBHandler
 
     def signup(self, username, password):
@@ -18,6 +18,7 @@ class ChatSystem:
 
     def login(self, username, password):
         user = self.dbHandler.findByName(username)
+
         return user.id
 
     def addChatroom(self, ownerName, chatroomName):
@@ -56,14 +57,14 @@ class ChatSystem:
 
         chatroom.addMessage(Message(username,formattedMessage,self.__getTime()))
 
-    def getMessages(self, room, username):
+    def getMessagesByTime(self, room, username):
         chatroom = self.__getChatroom(room)
 
         user = dbHandler.findByName(username)
 
         return chatroom.getMessagesByTime(self.getTime() - 60, user)
 
-    def getMessages(self, room, username, start):
+    def getMessagesByIndex(self, room, username, start):
         chatroom = self.__getChatroom(room)
 
         user = dbHandler.findByName(username)
@@ -86,7 +87,7 @@ class ChatSystem:
 
     def __getChatroom(self, name):
         try:
-            return chatrooms[name]
+            return self.chatrooms[name]
         except KeyError:
             raise ChatroomDoesNotExistException
 
