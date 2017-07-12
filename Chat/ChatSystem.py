@@ -9,6 +9,7 @@ class ChatSystem:
         self.chatrooms = {self.DEFAULT_CHATROOM : Chatroom(self.DEFAULT_CHATROOM,None)}
         #get DBHandler
 
+
     def signup(self, username, password):
         self.__formatUsername(username)
         self.__formatPassword(password)
@@ -91,13 +92,13 @@ class ChatSystem:
         except KeyError:
             raise ChatroomDoesNotExistException
 
-    def __formatMessage(self):
+    def __formatMessage(self, message):
         pass
 
-    def __formatUsername(self):
+    def __formatUsername(self, username):
         pass
 
-    def __formatPassword(self):
+    def __formatPassword(self, password):
         pass
 
     def __getTime(self):

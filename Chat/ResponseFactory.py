@@ -6,6 +6,7 @@ class ResponseFactory:
     RESPONSE_TYPE = 'responseType'
     REQUEST_TYPE_MISSING = 'RequestTypeMissing'
     REQUEST_FORMAT_ERROR = 'RequestFormatError'
+    PARAMETER_FORMAT_ERROR = 'ParameterFormatError'
     OK = 'Ok'
     DUPLICATE_USERNAME = 'DuplicateUsername'
     INVALID_USERNAME = 'InvalidUsername'
@@ -23,6 +24,7 @@ class ResponseFactory:
     USER_NOT_ON_LIST = 'UserNotOnList'
     USERNAME = 'username'
     TEXT = 'text'
+    USERID = 'userID'
 
     def __init__(self):
         pass
@@ -81,3 +83,9 @@ class ResponseFactory:
 
         response[self.MESSAGES] = messagesJSON
         return json.dumps(response)
+
+    def loggedIn(self, userID):
+        return json.dumps({self.RESPONSE_TYPE : self.OK, self.USER_ID : userID})
+
+    def parameterFormatError(self):
+        return json.dumps({self.RESPONSE_TYPE: self.PARAMETER_FORMAT_ERROR})

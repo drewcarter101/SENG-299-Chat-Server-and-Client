@@ -62,69 +62,83 @@ class Server:
             return self.responseFactory.requestTypeMissing()
 
         #route the request to the proper function in the controller
-        if requestType == self.SIGN_UP:
-            username = self.__getParameter(requestDict, self.USERNAME, str)
-            password = self.__getParameter(requestDict, self.PASSWORD, str)
-            return self.controller.signup(username, password)
-        elif requestType == self.LOGIN:
-            username = self.__getParameter(requestDict, self.USERNAME, str)
-            password = self.__getParameter(requestDict, self.PASSWORD, str)
-            return self.controller.login(username, password)
-        elif requestType == self.SEND:
-            userID = self.__getParameter(requestDict, self.USER_ID, int)
-            password = self.__getParameter(requestDict, self.PASSWORD, str)
-            chatroom = self.__getParameter(requestDict, self.CHATROOM, str)
-            message = self.__getParameter(requestDict, self.MESSAGE, str)
-            return self.controller.send(userID, password, chatroom, message)
-        elif requestType == self.GET:
-            userID = self.__getParameter(requestDict, self.USER_ID, int)
-            password = self.__getParameter(requestDict, self.PASSWORD, str)
-            chatroom = self.__getParameter(requestDict, self.CHATROOM, str)
-            lastUpdate = self.__getParameter(requestDict, self.LAST_UPDATE, int)
-            return self.controller.get(userID, password, chatroom, lastUpdate)
-        elif requestType == self.SET_ALIAS:
-            userID = self.__getParameter(requestDict, self.USER_ID, int)
-            password = self.__getParameter(requestDict, self.PASSWORD, str)
-            newUsername = self.__getParameter(requestDict, self.NEW_USERNAME, str)
-            return self.controller.set_alias(userID, password, newUsername)
-        elif requestType == self.JOIN:
-            userID = self.__getParameter(requestDict, self.USER_ID, int)
-            password = self.__getParameter(requestDict, self.PASSWORD, str)
-            chatroom = self.__getParameter(requestDict, self.CHATROOM, str)
-            return self.controller.join(userID, password, chatroom)
-        elif requestType == self.CREATE:
-            userID = self.__getParameter(requestDict, self.USER_ID, int)
-            password = self.__getParameter(requestDict, self.PASSWORD, str)
-            chatroom = self.__getParameter(requestDict, self.CHATROOM, str)
-            return self.controller.create(userID, password, chatroom)
-        elif requestType == self.BLOCK:
-            userID = self.__getParameter(requestDict, self.USER_ID, int)
-            password = self.__getParameter(requestDict, self.PASSWORD, str)
-            chatroom = self.__getParameter(requestDict, self.CHATROOM, str)
-            userToBlock = self.__getParameter(requestDict, self.USER_TO_BLOCK, str)
-            return self.controller.block(userID, password, chatroom, userToBlock)
-        elif requestType == self.UNBLOCK:
-            userID = self.__getParameter(requestDict, self.USER_ID, int)
-            password = self.__getParameter(requestDict, self.PASSWORD, str)
-            chatroom = self.__getParameter(requestDict, self.CHATROOM, str)
-            userToUnblock = self.__getParameter(requestDict, self.USER_TO_UNBLOCK, str)
-            return self.controller.unblock(userID, password, chatroom, userToUnblock)
-        elif requestType == self.DELETE:
-            userID = self.__getParameter(requestDict, self.USER_ID, int)
-            password = self.__getParameter(requestDict, self.PASSWORD, str)
-            chatroom = self.__getParameter(requestDict, self.CHATROOM, str)
-            return self.controller.delete(userID, password, chatroom)
-        else:
-            return self.responseFactory.requestFormatError()
+        try:
+            if requestType == self.SIGN_UP:
+                username = self.__getParameter(requestDict, self.USERNAME, str, False)
+                password = self.__getParameter(requestDict, self.PASSWORD, str, False)
+                return self.controller.signup(username, password)
+            elif requestType == self.LOGIN:
+                username = self.__getParameter(requestDict, self.USERNAME, str, False)
+                password = self.__getParameter(requestDict, self.PASSWORD, str, False)
+                return self.controller.login(username, password)
+            elif requestType == self.SEND:
+                userID = self.__getParameter(requestDict, self.USER_ID, int, False)
+                password = self.__getParameter(requestDict, self.PASSWORD, str, False)
+                chatroom = self.__getParameter(requestDict, self.CHATROOM, str, False)
+                message = self.__getParameter(requestDict, self.MESSAGE, str, False)
+                return self.controller.send(userID, password, chatroom, message)
+            elif requestType == self.GET:
+                userID = self.__getParameter(requestDict, self.USER_ID, int, False)
+                password = self.__getParameter(requestDict, self.PASSWORD, str, False)
+                chatroom = self.__getParameter(requestDict, self.CHATROOM, str, False)
+                lastUpdate = self.__getParameter(requestDict, self.LAST_UPDATE, int, True)
+                return self.controller.get(userID, password, chatroom, lastUpdate)
+            elif requestType == self.SET_ALIAS:
+                userID = self.__getParameter(requestDict, self.USER_ID, int, False)
+                password = self.__getParameter(requestDict, self.PASSWORD, str, False)
+                newUsername = self.__getParameter(requestDict, self.NEW_USERNAME, str, False)
+                return self.controller.set_alias(userID, password, newUsername)
+            elif requestType == self.JOIN:
+                userID = self.__getParameter(requestDict, self.USER_ID, int, False)
+                password = self.__getParameter(requestDict, self.PASSWORD, str, False)
+                chatroom = self.__getParameter(requestDict, self.CHATROOM, str, False)
+                return self.controller.join(userID, password, chatroom)
+            elif requestType == self.CREATE:
+                userID = self.__getParameter(requestDict, self.USER_ID, int, False)
+                password = self.__getParameter(requestDict, self.PASSWORD, str, False)
+                chatroom = self.__getParameter(requestDict, self.CHATROOM, str, False)
+                return self.controller.create(userID, password, chatroom)
+            elif requestType == self.BLOCK:
+                userID = self.__getParameter(requestDict, self.USER_ID, int, False)
+                password = self.__getParameter(requestDict, self.PASSWORD, str, False)
+                chatroom = self.__getParameter(requestDict, self.CHATROOM, str, False)
+                userToBlock = self.__getParameter(requestDict, self.USER_TO_BLOCK, str, False)
+                return self.controller.block(userID, password, chatroom, userToBlock)
+            elif requestType == self.UNBLOCK:
+                userID = self.__getParameter(requestDict, self.USER_ID, int, False)
+                password = self.__getParameter(requestDict, self.PASSWORD, str, False)
+                chatroom = self.__getParameter(requestDict, self.CHATROOM, str, False)
+                userToUnblock = self.__getParameter(requestDict, self.USER_TO_UNBLOCK, str, False)
+                return self.controller.unblock(userID, password, chatroom, userToUnblock)
+            elif requestType == self.DELETE:
+                userID = self.__getParameter(requestDict, self.USER_ID, int, False)
+                password = self.__getParameter(requestDict, self.PASSWORD, str, False)
+                chatroom = self.__getParameter(requestDict, self.CHATROOM, str, False)
+                return self.controller.delete(userID, password, chatroom)
+            else:
+                return self.responseFactory.unknownRequestType()
+        except InputFormatException:
+            return self.responseFactory.parametersFormatError()
+        except ParameterMissingException:
+            return self.responseFactory.parametersMissing()
 
 
-    def __getParameter(self,requestDict, key, type):
+    def __getParameter(self,requestDict, key, type, nullable):
         try:
             value = requestDict[key]
 
             if value is type:
                 return value
+            else:
+                raise ParameterFormatError
         except KeyError:
-            pass
+            if not nullable:
+                raise ParameterMissingException
 
         return None
+
+class InputFormatException:
+    pass
+
+class ParameterMissingException:
+    pass
