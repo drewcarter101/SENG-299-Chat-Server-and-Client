@@ -82,7 +82,7 @@ class Chat():
         print "What do you want to do now?"
         while True: 
             input_list= raw_input()
-            parser=InpuHandler(input_list.split(" "), cred.getCredentials(), csi.getCurrentChatroom())
+            parser=InputHandler(input_list.split(" "), cred.getCredentials(), csi.getCurrentChatroom())
             output= json.loads(parser.to_json())
             if output["Type"]=="client_command":
                 peformAction(output["requestType"], output["value"])
