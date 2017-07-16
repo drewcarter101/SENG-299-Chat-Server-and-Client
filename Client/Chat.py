@@ -85,7 +85,7 @@ class Chat():
             parser=InputHandler(input_list.split(" "), cred.getCredentials(), csi.getCurrentChatroom())
             output= json.loads(parser.to_json())
             if output["Type"]=="client_command":
-                peformAction(output["requestType"], output["value"])
+                self.peformAction(output["requestType"], output["value"])
             elif output["Type"]=="error":
                 print output["value"]
             else:
