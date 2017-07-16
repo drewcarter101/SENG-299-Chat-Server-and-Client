@@ -17,7 +17,7 @@ with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
 def sign_up(username,password):
     if "/quit" in [username, password]:
         sys.exit()
-    data={"requestType": "signup", "username": username, "password": password }
+    data={"requestType": "signup", "userID": username, "password": password }
     json_data = json.dumps(data)
     #send json_data to server
     #wait for response, return response
@@ -26,14 +26,14 @@ def sign_up(username,password):
 def login(username,password):
     if "/quit" in [username, password]:
         sys.exit()
-    data={"requestType": "login", "username": username, "password": password }
+    data={"requestType": "login", "userID": username, "password": password }
     json_data = json.dumps(data)
     #send json_data to server
     #wait for response, return response
     return "Ok"
 
 def set_alias(username, password, newUsername):
-    data={"requestType": "set_alias", "username": username, "password": password, "newUsername": newUsername }
+    data={"requestType": "set_alias", "userID": username, "password": password, "value": newUsername }
     json_data = json.dumps(data)
     #send json_data to server
     #wait for response, return response
@@ -88,7 +88,7 @@ while True: #Main Program loop
     if output["requestType"]=="client_command":
         peformAction(output["command"], output["value"])
     elif output["requestType"]=="error":
-        print output["message"]
+        print output["value"]
     else:
         #else send output to server to decide what to do next
         #server_Send(output)
@@ -98,7 +98,7 @@ while True: #Main Program loop
             #messages[result["message"] ]="unseen"
         #else:
             #print errors[result["message"]]
-        print(output["message"])
+        print(output["value"])
     #result=json.loads(server.recieve())
     #if result["requestType"]=="normal":
         #add result["message"] to list of messages:
