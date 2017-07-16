@@ -4,7 +4,7 @@ import sys
 import re
 import json
 
-class InpuHandler():
+class InputHandler():
 
     def send_command(self, commands, user_data, chatroom):
         commands=list(filter(None, commands))
@@ -17,7 +17,7 @@ class InpuHandler():
         
         if len(commands)>1: data["value"]=commands[1]
         else: data["value"]=None
-        data["userID"] = user_data["username"]
+        data["userID"] = user_data["userID"]
         data["password"] = user_data["password"]
         data["chatroom"] = chatroom
         json_data = json.dumps(data)
@@ -36,13 +36,13 @@ class InpuHandler():
             data["Type"]="normal"
             data["requestType"]="message"
             data["value"] = message
-        data["userID"] = user_data["username"]
+        data["userID"] = user_data["userID"]
         data["password"] = user_data["password"]
         data["chatroom"] = chatroom
         json_data = json.dumps(data)
         return json_data
 
-    def __init__(self, input_list, user_data):
+    def __init__(self, input_list, user_data, chatroom):
         self.chatroom_commands =["join","create","block", "unblock", "delete","set_alias", "help", "quit"]
         formats={":b": '\033[1m', "b:": '\033[0m',":u": '\033[4m', "u:": '\033[0m', ":h": '\033[91m', "h:": '\033[0m', ":happy:": u'\U0001f604', ":sad:": u'\U0001F622', ":angry:": u'\U0001F620', ":bored:": u'\U0001F634', ":thumbsup:": u'\U0001F44D', ":thumbsdown:": u'\U0001F44E', ":highfive:": u'\U0000270B'}
         errors={"invalid_command" :"'{}' does not exist, Type /help for a list of chat commands", "invalid_useOf_command" :"Invalid arguments for '{}', Type /help for a list of chat commands"}
@@ -56,9 +56,9 @@ class InpuHandler():
 
         
         if command_input is not None:
-            self.output=self.send_command([command_input.group(1), command_input.group(2), command_input.group(3)], user_data)
+            self.output=self.send_command([command_input.group(1), command_input.group(2), command_input.group(3)], user_data, chatroom)
         else:
-            self.output= self.send_message(input, input_list, errors, user_data)
+            self.output= self.send_message(input, input_list, errors, user_data, chatroom)
 
     def to_json(self):
         return self.output
