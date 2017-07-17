@@ -24,7 +24,7 @@ class ResponseFactory:
     USER_NOT_ON_LIST = 'UserNotOnList'
     USERNAME = 'username'
     TEXT = 'text'
-    USERID = 'userID'
+    USER_ID = 'userID'
 
     def __init__(self):
         pass
@@ -76,12 +76,11 @@ class ResponseFactory:
 
     def returnMessages(self, lastUpdate, messages):
         response = {self.RESPONSE_TYPE : self.OK, self.LAST_UPDATE : lastUpdate}
-        messagesJSON = []
-
+        messagesList = []
         for message in messages:
-            messagesJSON.append(json.loads({self.USERNAME : message.username, self.TEXT : message.text}))
+            messagesList.append({self.USERNAME : message.username, self.TEXT : message.text})
 
-        response[self.MESSAGES] = messagesJSON
+        response[self.MESSAGES] = messagesList
         return json.dumps(response)
 
     def loggedIn(self, userID):

@@ -1,12 +1,13 @@
 import unittest
 from Chatroom import *
+from User import User
 from Message import Message
 import time
 
 
 class ChatroomTest(unittest.TestCase):
     def testAddMessageFromOwner(self):
-        owner = 123
+        owner = User("ownername", 123,"password")
         roomName = "general"
         messageText = "123"
         messageTime = int(time.time())
@@ -19,8 +20,8 @@ class ChatroomTest(unittest.TestCase):
         self.assertMessageListEquals(messages, [Message(owner,messageText,messageTime)])
 
     def testAddMessageFromNotFromOwner(self):
-        owner = 123
-        user = 1234
+        owner = User("ownername", 123, "password")
+        user = User("username", 1234,"password")
         roomName = "general"
         messageText = "123"
         messageTime = int(time.time())
@@ -34,8 +35,8 @@ class ChatroomTest(unittest.TestCase):
 
 
     def testAddMessageFromBannedUser(self):
-        owner = 123
-        user = 1234
+        owner = User(123, "ownername", "password")
+        user = User(1234, "username", "password")
         roomName = "general"
         messageText = "123"
         messageTime = int(time.time())
@@ -47,13 +48,13 @@ class ChatroomTest(unittest.TestCase):
 
         self.assertEqual(len(messages), 1)
         receivedMessage = messages[0]
-        self.assertEqual(receivedMessage.userID, user)
+        self.assertEqual(receivedMessage.user.name, user.name)
         self.assertEqual(receivedMessage.text, messageText)
         self.assertEqual(receivedMessage.time, messageTime)
 
     def testGetMessageByIndexWithIndex(self):
-        owner = 123
-        user = 1234
+        owner = User(123, "ownername", "password")
+        user = User(1234, "username", "password")
 
         roomName = "general"
         messageTime = int(time.time())
@@ -92,8 +93,8 @@ class ChatroomTest(unittest.TestCase):
         self.assertMessageListEquals(messages, [])
 
     def testGetMessagesByTimeBanned(self):
-        owner = 123
-        user = 1234
+        owner = User(123, "ownername", "password")
+        user = User(1234, "username", "password")
 
         roomName = "general"
         messageTime = int(time.time())
@@ -118,9 +119,8 @@ class ChatroomTest(unittest.TestCase):
             pass
 
     def testGetMessagesByTime(self):
-        owner = 123
-        user = 1234
-
+        owner = User(123, "ownername", "password")
+        user = User(1234, "username", "password")
         roomName = "general"
         messageTime = int(time.time())
         messages = []
@@ -160,8 +160,8 @@ class ChatroomTest(unittest.TestCase):
         self.assertEqual(receivedMessages[0], 99)
 
     def testGetMessagesByTimeEmpty(self):
-        owner = 123
-        user = 1234
+        owner = User(123, "ownername", "password")
+        user = User(1234, "username", "password")
         roomName = "general"
         messageText = "123"
         messageTime = int(time.time())
@@ -172,8 +172,8 @@ class ChatroomTest(unittest.TestCase):
         self.assertEqual(messages[0], -1)
 
     def testGetMessageByIndexBannedUser(self):
-        owner = 123
-        user = 1234
+        owner = User(123, "ownername", "password")
+        user = User(1234, "username", "password")
         roomName = "general"
         messageText = "123"
         messageTime = int(time.time())
@@ -197,8 +197,8 @@ class ChatroomTest(unittest.TestCase):
 
 
     def testBanOwner(self):
-        owner = 123
-        user = 1234
+        owner = User(123, "ownername", "password")
+        user = User(1234, "username", "password")
         roomName = "general"
         messageText = "123"
         messageTime = int(time.time())
@@ -217,9 +217,9 @@ class ChatroomTest(unittest.TestCase):
 
 
     def testBanUserNotOwner(self):
-        owner = 123
-        user1 = 1234
-        user2 = 12345
+        owner = User("ownername", 123, "password")
+        user1 = User("user1name", 1234, "password")
+        user2 = User("user2name", 12345, "password")
         roomName = "general"
         messageText = "123"
         messageTime = int(time.time())
@@ -243,8 +243,8 @@ class ChatroomTest(unittest.TestCase):
         self.assertMessageListEquals(messages, [Message(owner, messageText, messageTime)])
 
     def testUnbanUser(self):
-        owner = 123
-        user = 1234
+        owner = User(123, "ownername", "password")
+        user = User(1234, "username", "password")
 
         roomName = "general"
         messageText = "123"
@@ -262,8 +262,8 @@ class ChatroomTest(unittest.TestCase):
         self.assertMessageListEquals(messages, [Message(owner, messageText, messageTime)])
 
     def testBanUnbanBan(self):
-        owner = 123
-        user = 1234
+        owner = User(123, "ownername", "password")
+        user = User(1234, "username", "password")
 
         roomName = "general"
         messageText = "123"
@@ -284,8 +284,8 @@ class ChatroomTest(unittest.TestCase):
             pass
 
     def testUnbanUserNotBanned(self):
-        owner = 123
-        user = 1234
+        owner = User(123, "ownername", "password")
+        user = User(1234, "username", "password")
 
         roomName = "general"
         messageText = "123"
@@ -302,8 +302,8 @@ class ChatroomTest(unittest.TestCase):
             pass
 
     def testbanUserTwice(self):
-        owner = 123
-        user = 1234
+        owner = User(123, "ownername","password")
+        user = User(1234, "username","password")
         roomName = "general"
         messageText = "123"
         messageTime = int(time.time())
@@ -321,9 +321,9 @@ class ChatroomTest(unittest.TestCase):
             pass
 
     def testUnbanUserNotOwner(self):
-        owner = 123
-        user1 = 1234
-        user2 = 12345
+        owner = User("ownername", 123, "password")
+        user1 = User("user1name", 1234, "password")
+        user2 = User("user2name", 12345, "password")
         roomName = "general"
         messageText = "123"
         messageTime = int(time.time())
@@ -347,7 +347,7 @@ class ChatroomTest(unittest.TestCase):
 
     def testNoOwner(self):
         owner = None
-        user = 1234
+        user = User(1234, "username", "password")
         roomName = "general"
         chatroom = Chatroom(roomName, owner)
 
@@ -367,7 +367,8 @@ class ChatroomTest(unittest.TestCase):
             leftMessage = left[i]
             rightMessage = right[i]
 
-            self.assertEqual(leftMessage.userID, rightMessage.userID)
+            self.assertEqual(leftMessage.user.name, rightMessage.user.name)
+            self.assertEqual(leftMessage.user.id, rightMessage.user.id)
             self.assertEqual(leftMessage.text, rightMessage.text)
             self.assertEqual(leftMessage.time, rightMessage.time)
 

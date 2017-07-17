@@ -1,7 +1,7 @@
 
 
 class Message:
-    def __init__(self, userID, text, time):
-        self.userID = userID
+    def __init__(self, user, text, time):
+        self.user = user
         self.text = text
         self.time = time
