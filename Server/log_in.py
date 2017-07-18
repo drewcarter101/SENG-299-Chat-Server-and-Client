@@ -10,15 +10,19 @@ from User import User
 
 
 class dbHandler:
-    def __init__(self):
-        
+    def __init__(self,database,user,password,host,port):
+        self.database=database
+        self.user=user
+        self.password=password 
+        self.host=host
+        self.port=port
         try:
             self.con = psycopg2.connect(
-                database="d8949uhaqoqd28",
-                user="gmultvozsunwxb",
-                password="6b0f18a546857583252b8da92d3dfcbc811de51fc3ace445b3f972e35aba2f7f",
-                host="ec2-54-225-236-102.compute-1.amazonaws.com",
-                port=5432
+                database=self.database,
+                user=self.user,
+                password=self.password,
+                host=self.host,
+                port=self.port
                 )
 
             self.cur =self.con.cursor()
@@ -26,7 +30,7 @@ class dbHandler:
         except Exception as err:
             logging.error('functionName:%s',err)
         
-
+    """insert user name and password into db, return id"""
     def insert(self,username,password):
         try:
             self.cur.execute("INSERT INTO log_in(username, password) VALUES('%s','%s');"%(username,password))
@@ -34,24 +38,22 @@ class dbHandler:
             a=self.cur.fetchone()
         
             self.id=int(a[0])
-            #print(self.id)
-            #return self.id #something wrong here, only when print the id, it will display in db
-
+            
         except Exception as err:
             logging.error('functionName:%s',err)
 
         self.con.commit()
         self.con.close()
         return self.id
+        
 
-
+    """take id as input, return an instance of User"""
     def findByID(self,id):    
         try:
             self.cur.execute("SELECT username, password FROM log_in WHERE id=%s;",[id]) 
             properties=self.cur.fetchone()  
             self.user=User(properties[0],id,properties[1])
-            #return self.user #it always return none
-
+           
         except Exception as err:
              logging.error('functionName:%s',err)
     
@@ -60,13 +62,13 @@ class dbHandler:
         return self.user
 
 
+    """take username as input, return an instance of User"""
     def findByName(self,username):
         try:
             self.cur.execute("SELECT id, password FROM log_in WHERE username='%s';"%username)
             properties=self.cur.fetchone()
             self.user=User(username,properties[0],properties[1])
-            #return self.user #always return none
-
+           
         except Exception as err:
             logging.error('functionName:%s',err)
     
@@ -74,17 +76,15 @@ class dbHandler:
         self.con.close()
         return self.user 
 
-
+    """ take id, new_username, new_password as input, no return """
     def updateUser(self,id,new_username,new_password):
         try:
-            self.cur.execute("UPDATE log_in SET username='%s', password='%s' WHERE id=%s;"%(username,password,id))
+            self.cur.execute("UPDATE log_in SET username='%s', password='%s' WHERE id=%s;"%(new_username,new_password,id))
         except Exception as err:
             logging.error('functionName:%s',err)   
 
-        self.con.commit()
-        self.con.close()
+        #self.con.commit()
+        #self.con.close()
 
 
-#db = dbHandler()
-#db.insert('wefsdfb','bddfgdfsdfj')
-#db.findByID(14)
+
