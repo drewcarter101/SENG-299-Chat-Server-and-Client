@@ -14,7 +14,7 @@ class ChatSystem:
         self.__formatUsername(username)
         self.__formatPassword(password)
 
-        return dbHandler.insert(username, password)
+        return self.dbHandler.insert(username, password)
 
 
     def login(self, username, password):
@@ -22,14 +22,14 @@ class ChatSystem:
 
         return user.id
 
-    def addChatroom(self, ownerName, chatroomName):
+    def addChatroom(self, ownerID, chatroomName):
         try:
             chatroom = self.__getChatroom(chatroomName)
             raise DuplicateChatroomException
         except ChatroomDoesNotExistException:
             pass
 
-        owner = self.dbHandler.findByName(ownerName)
+        owner = self.dbHandler.findByID(ownerID)
 
         self.chatrooms[chatroomName] = Chatroom(chatroomName, owner)
 
@@ -40,7 +40,7 @@ class ChatSystem:
         owner = self.dbHandler.findByName(ownerName)
 
         if owner.id == chatroom.owner:
-            chatrooms.pop(chatroomName)
+            self.chatrooms.pop(chatroomName)
         else:
             raise NotOwnerException
 
@@ -117,6 +117,9 @@ class UsernameFormatException:
     pass
 
 class PasswordFormatException:
+    pass
+
+class UserNotFoundException:
     pass
 
 

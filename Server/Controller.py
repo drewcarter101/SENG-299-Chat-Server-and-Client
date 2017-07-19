@@ -31,8 +31,13 @@ class Controller:
         except:
             pass
 
-    def send(self, userID, password, chatroom, message):
-        pass
+    def send(self, userID, password, chatroom, text):
+        if not self.authenticator.authenticateByID(userID, password):
+            return self.responseFactory.invalidCredentials()
+
+        try:
+            self.chatSystem.addMessage(chatroom, userID, text)
+        except:
 
     def get(self, userID, password, chatroom, lastUpdate):
         pass
