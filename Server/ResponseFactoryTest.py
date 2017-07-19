@@ -1,6 +1,7 @@
 import unittest
 from ResponseFactory import ResponseFactory
 from Message import Message
+from User import User
 
 class ResponseFactoryTest (unittest.TestCase):
     def testOK(self):
@@ -90,7 +91,7 @@ class ResponseFactoryTest (unittest.TestCase):
 
     def testReturnMessages(self):
         responseFactory = ResponseFactory()
-        messages = [Message('cam','text',456)]
+        messages = [Message(User("cam",154,"password"),'text',456)]
         response = responseFactory.returnMessages(123, messages)
         self.assertEqual(response, '{"responseType": "Ok", "messages": [{"username": "cam", "text": "text"}], "lastUpdate": 123}')
 

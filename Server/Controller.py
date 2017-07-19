@@ -21,7 +21,7 @@ class Controller:
         userID = self.chatSystem.login(username, password)
 
         if userID:
-            return self.responseFactory.loggedin(userID)
+            return self.responseFactory.loggedIn(userID)
         else:
             return self.responseFactory.invalidCredentials()
 

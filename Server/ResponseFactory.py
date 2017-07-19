@@ -78,7 +78,7 @@ class ResponseFactory:
         response = {self.RESPONSE_TYPE : self.OK, self.LAST_UPDATE : lastUpdate}
         messagesList = []
         for message in messages:
-            messagesList.append({self.USERNAME : message.username, self.TEXT : message.text})
+            messagesList.append({self.USERNAME : message.user.name, self.TEXT : message.text})
 
         response[self.MESSAGES] = messagesList
         return json.dumps(response)
