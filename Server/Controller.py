@@ -15,7 +15,7 @@ class Controller:
     #The functions return a string corresponding to the proper response type
     #The functions authenticate the users if necessary
     def login(self, username, password):
-        if not authenticator.authenticateByName(username, password):
+        if not self.authenticator.authenticateByName(username, password):
             return self.responseFactory.invalidCredentials()
 
         userID = self.chatSystem.login(username, password)
