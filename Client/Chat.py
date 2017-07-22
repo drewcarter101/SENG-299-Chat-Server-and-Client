@@ -49,7 +49,7 @@ class Chat():
     def run(self):
         
         print "Welcome! Type '/quit' to exit or '/help' for assistance."
-        print "login/sign-up below:"
+        print "login/sign-up below:\n"
         #login/signup screen
         while True:
             tempUser=raw_input("please enter a username: " + self.credential_errors["InvalidUsername"]+ "\n")
@@ -86,7 +86,7 @@ class Chat():
                 print "Invalid entry"
 
         #Main Program loop
-        print "What do you want to do now?"
+        print "\nWhat do you want to do now?"
         while True: 
             input_list= raw_input()
             parser=InputHandler(input_list.split(" "), cred.getCredentials(), csi.getCurrentChatroom())
