@@ -69,7 +69,7 @@ class Chatroom:
     # Returns:
     #   [Message]
     # Exceptions:
-    #   NotOwnerException
+    #   UserBannedException
     def getMessagesByIndex(self, start, user):
         self.__assertUnbanned(user)
         if start < 0:
