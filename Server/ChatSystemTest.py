@@ -173,11 +173,118 @@ class ChatSystemTest (unittest.TestCase):
         userID = chatSystem.signup(username, password)
 
         try:
-            chatSystem.addChatroom(userID, chatroomName)
+            chatSystem.addChatroom(userID + 1, chatroomName)
             self.fail()
         except UserNotFoundException:
             pass
 
+    def testJoinChatroom(self):
+        chatSystem = ChatSystem()
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
 
+        userID = chatSystem.signup(username, password)
+        chatSystem.addChatroom(userID, chatroomName)
+
+        chatSystem.joinChatroom(chatroomName, userID)
+
+    def testJoinChatroomDoesNotExist(self):
+        chatSystem = ChatSystem()
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        userID = chatSystem.signup(username, password)
+
+        try:
+            chatSystem.joinChatroom(chatroomName, userID)
+            self.fail()
+        except ChatroomDoesNotExistException:
+            pass
+
+    def testJoinChatroomUserNotFound(self):
+        chatSystem = ChatSystem()
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        userID = chatSystem.signup(username, password)
+
+        try:
+            chatSystem.joinChatroom(chatroomName, userID + 1)
+            self.fail()
+        except UserNotFoundException:
+            pass
+
+    def testJoinChatroomUserBanned(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+        chatSystem.banUser(ownerID, chatroomName, username)
+
+        try:
+            chatSystem.joinChatroom(chatroomName, userID + 1)
+            self.fail()
+        except UserBannedException:
+            pass
+
+    def testBanUser(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+        chatSystem.banUser(ownerID, chatroomName, username)
+
+        self.assertEqual(len(chatSystem.chatrooms[chatroomName].bannedUsers), 1)
+
+    def testBanUserNotFound(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+
+        try:
+            chatSystem.banUser(ownerID, chatroomName, username + '123')
+            self.fail()
+        except UserNotFoundException:
+            pass
+
+    def testBanUserNotOwner(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+
+        try:
+            chatSystem.banUser(userID, chatroomName, ownername)
+            self.fail()
+        except NotOwnerException:
+            pass
 
 unittest.main()
