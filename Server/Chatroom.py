@@ -8,6 +8,14 @@ class Chatroom:
         self.bannedUsers = {}
         self.messages = []
 
+    # user joins the chatroom
+    # Input:
+    #   user : User : Not None
+    # Exceptions:
+    #   UserBannedException
+    def join(self, user):
+        self.__assertUnbanned(user)
+
     # Adds a message to the chatroom
     # Input:
     #   message : Message : Not None

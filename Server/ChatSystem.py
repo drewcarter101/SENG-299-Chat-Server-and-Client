@@ -6,6 +6,7 @@ from Message import Message
 
 
 class ChatSystem:
+
     DEFAULT_CHATROOM = "general"
     def __init__(self):
         self.chatrooms = {self.DEFAULT_CHATROOM : Chatroom(self.DEFAULT_CHATROOM,None)}
@@ -98,6 +99,7 @@ class ChatSystem:
     #   ChatroomDoesNotExistException
     #   UserNotFoundException
     #   GenericServerException
+    #   UserBannedException
     def joinChatroom(self, roomName, userID):
         chatroom = self.__getChatroom(roomName)
 
