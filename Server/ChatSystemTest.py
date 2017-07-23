@@ -287,4 +287,207 @@ class ChatSystemTest (unittest.TestCase):
         except NotOwnerException:
             pass
 
+    def testUnbanUser(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+        chatSystem.banUser(ownerID, chatroomName, username)
+
+        self.assertEqual(len(chatSystem.chatrooms[chatroomName].bannedUsers), 1)
+
+        chatSystem.unbanUser(ownerID, chatroomName, username)
+
+        self.assertEqual(len(chatSystem.chatrooms[chatroomName].bannedUsers), 0)
+
+    def testUnbanUserNotBanned(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+
+        self.assertRaises(UserNotBannedException, chatSystem.unbanUser, ownerID, chatroomName, username)
+
+    def testUnbanUserNotOwner(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+
+        self.assertRaises(NotOwnerException, chatSystem.unbanUser, userID, chatroomName, ownername)
+
+    def testUnbanUserBanOwner(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+
+        self.assertRaises(UserIsOwnerException, chatSystem.unbanUser, ownerID, chatroomName, ownername)
+
+    def testUnbanUserUserNotFound(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+
+        self.assertRaises(UserNotFoundException, chatSystem.unbanUser, ownerID, chatroomName, "cam2")
+        self.assertRaises(UserNotFoundException, chatSystem.unbanUser, userID + 10, chatroomName, username)
+
+    def testUnbanUserChatroomNotFound(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        self.assertRaises(ChatroomDoesNotExistException, chatSystem.unbanUser, ownerID, chatroomName, username)
+
+    def testDeleteChatroom(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+        self.assertEqual(len(chatSystem.chatrooms), 2)
+
+        chatSystem.deleteChatroom(ownerID, chatroomName)
+        self.assertEqual(len(chatSystem.chatrooms), 1)
+
+    def testDeleteChatroomExceptions(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+
+        self.assertRaises(NotOwnerException, chatSystem.deleteChatroom, userID, chatroomName)
+        self.assertRaises(UserNotFoundException, chatSystem.deleteChatroom, userID + 10, chatroomName)
+        self.assertRaises(ChatroomDoesNotExistException, chatSystem.deleteChatroom, ownerID, chatroomName + '2')
+
+    def testGetMessagesByIndex(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+
+        for i in xrange(10):
+            chatSystem.addMessage(chatroomName, ownerID, 'message' + str(i))
+
+        messages = chatSystem.getMessagesByIndex(chatroomName, userID, 0)
+
+        self.assertEqual(len(messages), 9)
+
+    def testGetMessageByIndexExceptions(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+
+        for i in xrange(10):
+            chatSystem.addMessage(chatroomName, ownerID, 'message' + str(i))
+
+        self.assertRaises(UserNotFoundException, chatSystem.getMessagesByIndex, chatroomName, userID + 10, -1)
+        self.assertRaises(ChatroomDoesNotExistException, chatSystem.getMessagesByIndex, chatroomName + '2', ownerID, -1)
+
+        chatSystem.banUser(ownerID, chatroomName, userID)
+        self.assertRaises(UserBannedException, chatSystem.getMessagesByIndex, chatroomName, userID, -1)
+
+    def testGetMessageByTime(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+        for i in xrange(10):
+            chatSystem.addMessage(chatroomName, ownerID, 'message' + str(i))
+
+        time.sleep(61)
+        for i in xrange(10, 20):
+            chatSystem.addMessage(chatroomName, ownerID, 'message' + str(i))
+
+        messages = chatSystem.getMessagesByTime(chatroomName,ownerID)
+
+        self.assertEqual(messages(0), 19)
+        self.assertEquals(len(messages(1)), 10)
+
+    def testGetMessageByTimeExceptions(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+        for i in xrange(10):
+            chatSystem.addMessage(chatroomName, ownerID, 'message' + str(i))
+
+        self.assertRaises(UserNotFoundException, chatSystem.getMessagesByTime, chatroomName, userID + 10)
+        self.assertRaises(ChatroomDoesNotExistException, chatSystem.getMessagesByTime, chatroomName + '2', ownerID)
+
+        chatSystem.banUser(ownerID, chatroomName, username)
+        self.assertRaises(UserBannedException, chatSystem.getMessagesByTime, chatroomName, userID)
+
 unittest.main()

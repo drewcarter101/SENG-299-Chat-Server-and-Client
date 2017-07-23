@@ -199,7 +199,7 @@ class ChatSystem:
     def unbanUser(self, ownerID, roomName, username):
         chatroom = self.__getChatroom(roomName)
 
-        owner = dbHandler.findByName(ownerName)
+        owner = dbHandler.findByID(ownerID)
         user = dbHandler.findByName(username)
 
         chatroom.unbanUser(owner, user)
