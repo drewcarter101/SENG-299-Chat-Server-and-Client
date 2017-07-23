@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import sys
 import os
@@ -49,15 +50,15 @@ class Chat():
     def run(self):
         
         print "Welcome! Type '/quit' to exit or '/help' for assistance."
-        print "login/sign-up below:\n"
+        print "Login/sign-up below:\n"
         #login/signup screen
         while True:
-            tempUser=raw_input("please enter a username: " + self.credential_errors["InvalidUsername"]+ "\n")
+            tempUser=raw_input("Please enter a username: " + self.credential_errors["InvalidUsername"]+ "\n")
             if tempUser=="/quit":
                 self.quit()
             elif tempUser=="/help":
                 print self.helpText
-            tempPass=raw_input("please enter your password, if your account does not exist, you will be prompted to sign up: " + self.credential_errors["InvalidPassword"]+ "\n")
+            tempPass=raw_input("Please enter your password, if your account does not exist, you will be prompted to sign up: " + self.credential_errors["InvalidPassword"]+ "\n")
             if tempPass=="/quit":
                 self.quit()
             elif tempPass=="/help":
@@ -88,8 +89,8 @@ class Chat():
         #Main Program loop
         print "\nWhat do you want to do now?"
         while True: 
-            input_list= raw_input()
-            parser=InputHandler(input_list.split(" "), cred.getCredentials(), csi.getCurrentChatroom())
+            input_list= raw_input(">> ")
+            parser=InputHandler(input_list.split(" "), cred.getCredentials(), csi.getCurrentChatroom(), self.ClientUsername)
             output= json.loads(parser.to_json())
             if output["Type"]=="client_command":
                 self.peformAction(output["requestType"], output["value"])
