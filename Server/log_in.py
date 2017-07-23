@@ -15,7 +15,7 @@ class dbHandler:
            self.con= self.get_connection()
           
         except IOError as err:
-            logging.error('functionName:%s',err)
+            raise dbException
 
         
 
@@ -41,7 +41,7 @@ class dbHandler:
         
         this_user=self.findByName(username)
         if this_user != None:
-            raise DuplicateNameException()
+            raise DuplicateNameException
         else:
             cur =self.con.cursor()
             cmd_1="INSERT INTO log_in(username, password) VALUES(%s,%s);"
@@ -105,5 +105,6 @@ class DuplicateNameException(Exception):
 class IDNotExistException(Exception):
     pass
 
-
+class dbException(Exception):
+    pass
 
