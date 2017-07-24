@@ -175,14 +175,14 @@ class Chatroom:
         if self.__userIsBanned(user):
             raise UserBannedException
 
-class NotOwnerException:
+class NotOwnerException(Exception):
     pass
 
-class UserBannedException:
+class UserBannedException(Exception):
     pass
 
-class UserNotBannedException:
+class UserNotBannedException(Exception):
     pass
 
-class UserIsOwnerException:
+class UserIsOwnerException(Exception):
     pass

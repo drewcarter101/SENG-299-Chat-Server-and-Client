@@ -326,31 +326,31 @@ class ChatSystem:
     def __getTime(self):
         return int(time.time())
 
-class ChatroomDoesNotExistException:
+class ChatroomDoesNotExistException(Exception):
     pass
 
-class DuplicateChatroomException:
+class DuplicateChatroomException(Exception):
     pass
 
-class DuplicateUsernameException:
+class DuplicateUsernameException(Exception):
     pass
 
-class ChatroomFormatException:
+class ChatroomFormatException(Exception):
     pass
 
-class MessageFormatException:
+class MessageFormatException(Exception):
     pass
 
-class UsernameFormatException:
+class UsernameFormatException(Exception):
     pass
 
-class PasswordFormatException:
+class PasswordFormatException(Exception):
     pass
 
-class UserNotFoundException:
+class UserNotFoundException(Exception):
     pass
 
-class GenericServerException:
+class GenericServerException(Exception):
     pass
 
 
