@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import sys
 import os
@@ -15,7 +16,7 @@ class Chat():
         self.messages={}
         self.notTryingSignUp=True
 
-        self.credential_errors={"InvalidUsername": "Username must...", "InvalidPassword": "Password must be...", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username"}#fill in later
+        self.credential_errors={"InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username"}#fill in later
         
         #Help text
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -48,15 +49,20 @@ class Chat():
 
     def run(self):
         
-        print "Welcome!"
+        print "Welcome! Type '/quit' to exit or '/help' for assistance."
+        print "Login/sign-up below:\n"
         #login/signup screen
         while True:
-            tempUser=raw_input("please enter a username: " + self.credential_errors["InvalidUsername"]+ "\n")
+            tempUser=raw_input("Please enter a username: " + self.credential_errors["InvalidUsername"]+ "\n")
             if tempUser=="/quit":
                 self.quit()
-            tempPass=raw_input("please enter your password: " + self.credential_errors["InvalidPassword"]+ "\n")
-            if tempUser=="/quit":
+            elif tempUser=="/help":
+                print self.helpText
+            tempPass=raw_input("Please enter your password, if your account does not exist, you will be prompted to sign up: " + self.credential_errors["InvalidPassword"]+ "\n")
+            if tempPass=="/quit":
                 self.quit()
+            elif tempPass=="/help":
+                print self.helpText
             if self.login(tempUser, tempPass)== "Ok" and self.notTryingSignUp:
                 self.ClientUsername=tempUser
                 print "Login complete!"
@@ -75,14 +81,16 @@ class Chat():
                         print self.credential_errors[sign_up(tempUser, tempPass)]
                 elif response=="/quit":
                     self.quit()
+                elif response=="/help":
+                    print self.helpText
             else: 
                 print "Invalid entry"
 
         #Main Program loop
-        print "What do you want to do now?"
+        print "\nWhat do you want to do now?"
         while True: 
-            input_list= raw_input()
-            parser=InputHandler(input_list.split(" "), cred.getCredentials(), csi.getCurrentChatroom())
+            input_list= raw_input(">> ")
+            parser=InputHandler(input_list.split(" "), cred.getCredentials(), csi.getCurrentChatroom(), self.ClientUsername)
             output= json.loads(parser.to_json())
             if output["Type"]=="client_command":
                 self.peformAction(output["requestType"], output["value"])

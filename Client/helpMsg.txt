@@ -1,27 +1,26 @@
 
 Main Commands:
-/help: Lists chat commands
-/join [chatroom_name]: Join an existing chat room, exclude square brackets
-/create [chatroom_name]: Create a new chatroom, if the name is available
-/set_alias [alias]: Change alias, if the new name is available
-/block [user_alias]: If the user is the owner of the chatroom, remove the user listed from the current chat room and prevent them from rejoining
-/unblock [user_alias]: If the user is the owner of the chatroom, allow the user listed to join the current chatroom
-/delete [chatroom_name]: If the user is the owner of the chatroom, delete the chatroom and move all users to the default chatroom
-/quit: Exit client program
+1) /help ------------------- Lists chat commands
+2) /join [chatroom_name] ----Join an existing chat room, exclude square brackets
+3) /create [chatroom_name] - Create a new chatroom, if the name is available
+4) /set_alias [alias] ------ Change alias, if the new name is available
+5) /block [user_alias] ----- If the user is the owner of the chatroom, remove the user listed from the current chat room and prevent them from rejoining
+6) /unblock [user_alias] --- If the user is the owner of the chatroom, allow the user listed to join the current chatroom
+7) /delete [chatroom_name] - If the user is the owner of the chatroom, delete the chatroom and move all users to the default chatroom
+8) /quit ------------------- Exit client program
  
 Formatting:
-/b [text] b/: Allows the user to bolden whatever text is within “/b” and “b/”
-/i [text] i/: Allows the user to italicize whatever text is within “/i” and “i/”
-/u [text] u/: Allows the user to underline whatever text is within “/u” and “u/”
-/h [text] h/: Allows the user to highlight whatever text is within “/h” and “h/”. Highlight changes the text color to red.
+1) :b [text] b: - Allows the user to bolden text.
+2) :u [text] u: - Allows the user to underline text.
+3) :h [text] h: - Allows the user to highlight text. Highlight changes the text color to red.
  
  
-Emoji's:
-/happy: Posts the smiley face emoji
-/sad: Posts the sad face emoji
-/angry: Posts the angry face emoji
-/bored: Posts the bored face emoji
-/thumbsup: Posts the thumbs up emoji
-/thumbsdown: Posts the thumbs down emoji
-/highfive: Posts the high five emoji
+Emoticons:
+1) :happy: ------ Posts the smiley face emoji
+2) :sad: -------- Posts the sad face emoji
+3) :angry: ------ Posts the angry face emoji
+4) :bored: ------ Posts the bored face emoji
+5) :thumbsup: --- Posts the thumbs up emoji
+6) :thumbsdown: - Posts the thumbs down emoji
+7) :highfive: --- Posts the high five emoji
 
