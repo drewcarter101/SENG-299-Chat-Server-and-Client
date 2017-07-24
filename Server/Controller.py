@@ -20,10 +20,10 @@ class Controller:
             self.__authenticateByName(username, password)
             userID = self.chatSystem.login(username, password)
 
-            if userID:
-                return self.responseFactory.loggedIn(userID)
-            else:
+            if userID is None:
                 return self.responseFactory.invalidCredentials()
+
+            return self.responseFactory.loggedIn(userID)
         except Exception as e:
             return self.handleException(e)
 
@@ -112,31 +112,31 @@ class Controller:
             raise InvalidCredentialsException
 
     def handleException(self, e):
-        if e is InvalidCredentialsException:
+        if isinstance(e,InvalidCredentialsException):
             return self.responseFactory.invalidCredentials()
-        if e is ChatroomDoesNotExistException:
+        if isinstance(e,ChatroomDoesNotExistException):
             return self.responseFactory.chatroomDoesNotExist()
-        elif e is DuplicateChatroomException:
+        elif isinstance(e,DuplicateChatroomException):
             return self.responseFactory.duplicateChatrooom()
-        elif e is DuplicateUsernameException:
+        elif isinstance(e,DuplicateUsernameException):
             return self.responseFactory.duplicateUsername()
-        elif e is ChatroomFormatException:
+        elif isinstance(e,ChatroomFormatException):
             return self.responseFactory.invalidChatroom()
-        elif e is MessageFormatException:
+        elif isinstance(e,MessageFormatException):
             return self.responseFactory.invalidMessage()
-        elif e is UsernameFormatException:
+        elif isinstance(e,UsernameFormatException):
             return self.responseFactory.invalidUsername()
-        elif e is PasswordFormatException:
+        elif isinstance(e,PasswordFormatException):
             return self.responseFactory.invalidPassword()
-        elif e is UserNotFoundException:
+        elif isinstance(e,UserNotFoundException):
             return self.responseFactory.userDoesNotExist()
-        elif e is NotOwnerException:
+        elif isinstance(e,NotOwnerException):
             return self.responseFactory.notOwner()
-        elif e is UserBannedException:
+        elif isinstance(e,UserBannedException):
             return self.responseFactory.blocked()
-        elif e is UserNotBannedException:
+        elif isinstance(e,UserNotBannedException):
             return self.responseFactory.userNotOnList()
-        elif e is UserIsOwnerException:
+        elif isinstance(e,UserIsOwnerException):
             return self.responseFactory.userIsOwner()
         else:
             return self.responseFactory.serverError()
