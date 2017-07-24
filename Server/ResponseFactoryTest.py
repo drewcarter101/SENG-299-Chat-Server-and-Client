@@ -101,5 +101,18 @@ class ResponseFactoryTest (unittest.TestCase):
         response = responseFactory.returnMessages(12, messages)
         self.assertEqual(response, '{"responseType": "Ok", "messages": [], "lastUpdate": 12}')
 
+    def testServerError(self):
+        responseFactory = ResponseFactory()
+        response = responseFactory.serverError()
+        self.assertEqual(response, '{"responseType": "ServerError"}')
 
+    def testUserIsOwner(self):
+        responseFactory = ResponseFactory()
+        response = responseFactory.userIsOwner()
+        self.assertEqual(response, '{"responseType": "UserIsOwner"}')
+
+    def testInvalidChatroom(self):
+        responseFactory = ResponseFactory()
+        response = responseFactory.invalidChatroom()
+        self.assertEqual(response, '{"responseType": "InvalidChatroom"}')
 unittest.main()

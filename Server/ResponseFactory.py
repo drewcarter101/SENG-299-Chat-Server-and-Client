@@ -25,6 +25,9 @@ class ResponseFactory:
     __USERNAME = 'username'
     __TEXT = 'text'
     __USER_ID = 'userID'
+    __INVALID_CHATROOM = 'InvalidChatroom'
+    __SERVER_ERROR = 'ServerError'
+    __USER_IS_OWNER = 'UserIsOwner'
 
     def __init__(self):
         pass
@@ -88,4 +91,13 @@ class ResponseFactory:
 
     def parameterFormatError(self):
         return json.dumps({self.__RESPONSE_TYPE: self.__PARAMETER_FORMAT_ERROR})
+
+    def invalidChatroom(self):
+        return json.dumps({self.__RESPONSE_TYPE: self.__INVALID_CHATROOM})
+
+    def userIsOwner(self):
+        return json.dumps({self.__RESPONSE_TYPE: self.__USER_IS_OWNER})
+
+    def serverError(self):
+        return json.dumps({self.__RESPONSE_TYPE: self.__SERVER_ERROR})
 
