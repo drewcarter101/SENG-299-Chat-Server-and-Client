@@ -3,88 +3,89 @@ import json
 
 class ResponseFactory:
 
-    RESPONSE_TYPE = 'responseType'
-    REQUEST_TYPE_MISSING = 'RequestTypeMissing'
-    REQUEST_FORMAT_ERROR = 'RequestFormatError'
-    PARAMETER_FORMAT_ERROR = 'ParameterFormatError'
-    OK = 'Ok'
-    DUPLICATE_USERNAME = 'DuplicateUsername'
-    INVALID_USERNAME = 'InvalidUsername'
-    INVALID_PASSWORD = 'InvalidPassword'
-    PARAMETERS_MISSING = 'ParametersMissing'
-    INVALID_CREDENTIALS = 'InvalidCredentials'
-    INVALID_MESSAGE = 'InvalidMessage'
-    BLOCKED = 'Blocked'
-    CHATROOM_DOES_NOT_EXIST = 'ChatroomDoesNotExist'
-    LAST_UPDATE = 'lastUpdate'
-    MESSAGES = 'messages'
-    DUPLICATE_CHATROOM = 'DuplicateChatroom'
-    USER_DOES_NOT_EXIST = 'UserDoesNotExist'
-    NOT_OWNER = 'NotOwner'
-    USER_NOT_ON_LIST = 'UserNotOnList'
-    USERNAME = 'username'
-    TEXT = 'text'
-    USER_ID = 'userID'
+    __RESPONSE_TYPE = 'responseType'
+    __REQUEST_TYPE_MISSING = 'RequestTypeMissing'
+    __REQUEST_FORMAT_ERROR = 'RequestFormatError'
+    __PARAMETER_FORMAT_ERROR = 'ParameterFormatError'
+    __OK = 'Ok'
+    __DUPLICATE_USERNAME = 'DuplicateUsername'
+    __INVALID_USERNAME = 'InvalidUsername'
+    __INVALID_PASSWORD = 'InvalidPassword'
+    __PARAMETERS_MISSING = 'ParametersMissing'
+    __INVALID_CREDENTIALS = 'InvalidCredentials'
+    __INVALID_MESSAGE = 'InvalidMessage'
+    __BLOCKED = 'Blocked'
+    __CHATROOM_DOES_NOT_EXIST = 'ChatroomDoesNotExist'
+    __LAST_UPDATE = 'lastUpdate'
+    __MESSAGES = 'messages'
+    __DUPLICATE_CHATROOM = 'DuplicateChatroom'
+    __USER_DOES_NOT_EXIST = 'UserDoesNotExist'
+    __NOT_OWNER = 'NotOwner'
+    __USER_NOT_ON_LIST = 'UserNotOnList'
+    __USERNAME = 'username'
+    __TEXT = 'text'
+    __USER_ID = 'userID'
 
     def __init__(self):
         pass
 
     def ok(self):
-        return json.dumps({self.RESPONSE_TYPE : self.OK})
+        return json.dumps({self.__RESPONSE_TYPE : self.__OK})
 
     def requestTypeMissing(self):
-        return json.dumps({self.RESPONSE_TYPE : self.REQUEST_TYPE_MISSING})
+        return json.dumps({self.__RESPONSE_TYPE : self.__REQUEST_TYPE_MISSING})
 
     def requestFormatError(self):
-        return json.dumps({self.RESPONSE_TYPE : self.REQUEST_FORMAT_ERROR})
+        return json.dumps({self.__RESPONSE_TYPE : self.__REQUEST_FORMAT_ERROR})
 
     def duplicateUsername(self):
-        return json.dumps({self.RESPONSE_TYPE : self.DUPLICATE_USERNAME})
+        return json.dumps({self.__RESPONSE_TYPE : self.__DUPLICATE_USERNAME})
 
     def invalidUsername(self):
-        return json.dumps({self.RESPONSE_TYPE : self.INVALID_USERNAME})
+        return json.dumps({self.__RESPONSE_TYPE : self.__INVALID_USERNAME})
 
     def invalidPassword(self):
-        return json.dumps({self.RESPONSE_TYPE : self.INVALID_PASSWORD})
+        return json.dumps({self.__RESPONSE_TYPE : self.__INVALID_PASSWORD})
 
     def parametersMissing(self):
-        return json.dumps({self.RESPONSE_TYPE : self.PARAMETERS_MISSING})
+        return json.dumps({self.__RESPONSE_TYPE : self.__PARAMETERS_MISSING})
 
     def invalidCredentials(self):
-        return json.dumps({self.RESPONSE_TYPE : self.INVALID_CREDENTIALS})
+        return json.dumps({self.__RESPONSE_TYPE : self.__INVALID_CREDENTIALS})
 
     def invalidMessage(self):
-        return json.dumps({self.RESPONSE_TYPE : self.INVALID_MESSAGE})
+        return json.dumps({self.__RESPONSE_TYPE : self.__INVALID_MESSAGE})
 
     def blocked(self):
-        return json.dumps({self.RESPONSE_TYPE : self.BLOCKED})
+        return json.dumps({self.__RESPONSE_TYPE : self.__BLOCKED})
 
     def chatroomDoesNotExist(self):
-        return json.dumps({self.RESPONSE_TYPE : self.CHATROOM_DOES_NOT_EXIST})
+        return json.dumps({self.__RESPONSE_TYPE : self.__CHATROOM_DOES_NOT_EXIST})
 
     def duplicateChatrooom(self):
-        return json.dumps({self.RESPONSE_TYPE : self.DUPLICATE_CHATROOM})
+        return json.dumps({self.__RESPONSE_TYPE : self.__DUPLICATE_CHATROOM})
 
     def userDoesNotExist(self):
-        return json.dumps({self.RESPONSE_TYPE : self.USER_DOES_NOT_EXIST})
+        return json.dumps({self.__RESPONSE_TYPE : self.__USER_DOES_NOT_EXIST})
 
     def notOwner(self):
-        return json.dumps({self.RESPONSE_TYPE : self.NOT_OWNER})
+        return json.dumps({self.__RESPONSE_TYPE : self.__NOT_OWNER})
 
     def userNotOnList(self):
-        return json.dumps({self.RESPONSE_TYPE : self.USER_NOT_ON_LIST})
+        return json.dumps({self.__RESPONSE_TYPE : self.__USER_NOT_ON_LIST})
 
     def returnMessages(self, lastUpdate, messages):
-        response = {self.RESPONSE_TYPE : self.OK, self.LAST_UPDATE : lastUpdate}
+        response = {self.__RESPONSE_TYPE : self.__OK, self.__LAST_UPDATE : lastUpdate}
         messagesList = []
         for message in messages:
-            messagesList.append({self.USERNAME : message.user.name, self.TEXT : message.text})
+            messagesList.append({self.__USERNAME : message.user.name, self.__TEXT : message.text})
 
-        response[self.MESSAGES] = messagesList
+        response[self.__MESSAGES] = messagesList
         return json.dumps(response)
 
     def loggedIn(self, userID):
-        return json.dumps({self.RESPONSE_TYPE : self.OK, self.USER_ID : userID})
+        return json.dumps({self.__RESPONSE_TYPE : self.__OK, self.__USER_ID : userID})
 
     def parameterFormatError(self):
-        return json.dumps({self.RESPONSE_TYPE: self.PARAMETER_FORMAT_ERROR})
+        return json.dumps({self.__RESPONSE_TYPE: self.__PARAMETER_FORMAT_ERROR})
+

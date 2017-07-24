@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-from log_in import dbHandler 
+from DBHandler import dbHandler
 
 class Authenticator:
     def __init__(self):
 
-        self.db = dbHandler()
+        self.db = dbHandler
 
     def authenticateByID(self, userID, pw):
 
