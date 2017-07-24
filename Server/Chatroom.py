@@ -75,18 +75,19 @@ class Chatroom:
     #   start : Int : Not None
     #   user : User : Not None
     # Returns:
-    #   [Message]
+    #   (lastUpdate,[Message])
     # Exceptions:
     #   UserBannedException
     def getMessagesByIndex(self, start, user):
         self.__assertUnbanned(user)
         if start < 0:
-            return self.messages
+            messages = self.messages
         elif len(self.messages) < 1 or start >= len(self.messages):
-            return []
+            messages = []
         else:
-            return self.messages[start+1:]
+            messages = self.messages[start+1:]
 
+        return (len(self.messages) - 1, messages)
     # bans user from the chatroom
     # Input:
     #   owner : User : Not None

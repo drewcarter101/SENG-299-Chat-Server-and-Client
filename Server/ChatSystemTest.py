@@ -421,10 +421,12 @@ class ChatSystemTest (unittest.TestCase):
             chatSystem.addMessage(chatroomName, ownerID, 'message' + str(i))
 
         messages = chatSystem.getMessagesByIndex(chatroomName, userID, 0)
-        self.assertEqual(len(messages), 9)
+        self.assertEqual(messages[0], 9)
+        self.assertEqual(len(messages[1]), 9)
 
         messages = chatSystem.getMessagesByIndex(chatroomName, ownerID, None)
-        self.assertEqual(len(messages), 10)
+        self.assertEqual(messages[0], 9)
+        self.assertEqual(len(messages[1]), 10)
 
     def testGetMessageByIndexExceptions(self):
         chatSystem = ChatSystem()
