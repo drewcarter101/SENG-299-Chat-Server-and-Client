@@ -50,7 +50,7 @@ class ControllerTest(unittest.TestCase):
         responseDict = json.loads(response)
         self.assertEqual(len(responseDict), 2)
 
-        self.assertEqual(responseDict['ResponseType'], 'Ok')
+        self.assertEqual(responseDict['responseType'], 'Ok')
 
         id = responseDict['userID']
 
@@ -59,22 +59,22 @@ class ControllerTest(unittest.TestCase):
 
     def assertDuplicateUsername(self,response):
         responseDict = json.loads(response)
-        self.assertEqual(responseDict['ResponseType'], 'DuplicateUsername')
+        self.assertEqual(responseDict['responseType'], 'DuplicateUsername')
         self.assertEqual(len(responseDict), 1)
 
     def assertUsernameFormatError(self, response):
         responseDict = json.loads(response)
-        self.assertEqual(responseDict['ResponseType'], 'InvalidUsername')
+        self.assertEqual(responseDict['responseType'], 'InvalidUsername')
         self.assertEqual(len(responseDict), 1)
 
     def assertPasswordFormatError(self, response):
         responseDict = json.loads(response)
-        self.assertEqual(responseDict['ResponseType'], 'InvalidPassword')
+        self.assertEqual(responseDict['responseType'], 'InvalidPassword')
         self.assertEqual(len(responseDict), 1)
 
     def assertInvalidCredentials(self, response):
         responseDict = json.loads(response)
-        self.assertEqual(responseDict['ResponseType'], 'InvalidCredentials')
+        self.assertEqual(responseDict['responseType'], 'InvalidCredentials')
         self.assertEqual(len(responseDict), 1)
 
 

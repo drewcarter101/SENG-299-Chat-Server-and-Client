@@ -29,8 +29,8 @@ class Controller:
 
     def signup(self, username, password):
         try:
-            self.chatSystem.signup(username, password)
-            return self.responseFactory.ok()
+            userID = self.chatSystem.signup(username, password)
+            return self.responseFactory.loggedIn(userID)
         except Exception as e:
             return self.handleException(e)
 
@@ -142,5 +142,5 @@ class Controller:
             return self.responseFactory.serverError()
 
 
-class InvalidCredentialsException:
+class InvalidCredentialsException(Exception):
     pass
