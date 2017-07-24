@@ -107,6 +107,16 @@ class ChatSystem:
 
         chatroom.join(user)
 
+    def set_alias(self, userID, newUsername, password):
+        try:
+            self.dbHandler.updateUser(userID, newUsername, password)
+        except DuplicateNameException:
+            raise DuplicateUsernameException
+        except IDNotExistException:
+            raise UserNotFoundException
+        except DBException:
+            raise GenericServerException
+
     # Adds Message to chatroom
     # Input:
     #   room : str : Not None

@@ -492,4 +492,28 @@ class ChatSystemTest (unittest.TestCase):
         chatSystem.banUser(ownerID, chatroomName, username)
         self.assertRaises(UserBannedException, chatSystem.getMessagesByTime, chatroomName, userID)
 
+    def testSetAlias(self):
+        chatSystem = ChatSystem()
+        username = 'owner'
+        newUsername = 'cam'
+        password = 'password'
+
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.set_alias(userID, newUsername, password)
+
+        chatSystem.login(newUsername, password)
+
+    def testSetAliasExceptions(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        self.assertRaises(DuplicateUsernameException, chatSystem.set_alias, ownerID, username)
+        self.assertRaises(UserNotFoundException, chatSystem.set_alias, userID + 10, username + '2')
+
 unittest.main()
