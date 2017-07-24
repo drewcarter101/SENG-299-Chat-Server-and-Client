@@ -1,7 +1,7 @@
 import time
-
+import re
 from Chatroom import *
-from log_in import *
+from DBHandler import *
 from Message import Message
 
 
@@ -10,7 +10,11 @@ class ChatSystem:
     DEFAULT_CHATROOM = "general"
     def __init__(self):
         self.chatrooms = {self.DEFAULT_CHATROOM : Chatroom(self.DEFAULT_CHATROOM,None)}
-        self.dbHandler = dbHandler()
+        self.dbHandler = dbHandler
+        self.userRE = re.compile('^[a-zA-Z0-9]{1,20}$')
+        self.passwordRE = self.userRE
+        self.chatroomRE = self.userRE
+
 
     # signs the user up to the ChatSystem
     # Input:
@@ -171,10 +175,10 @@ class ChatSystem:
 
         user = self.__getUserByID(userID)
 
-        if start:
-            return chatroom.getMessagesByIndex(start, user)
-        else:
+        if start is None:
             return chatroom.getMessagesByIndex(-1, user)
+        else:
+            return chatroom.getMessagesByIndex(start, user)
 
     # bans user from chatroom, if authorized
     # Input:
@@ -209,8 +213,8 @@ class ChatSystem:
     def unbanUser(self, ownerID, roomName, username):
         chatroom = self.__getChatroom(roomName)
 
-        owner = dbHandler.findByID(ownerID)
-        user = dbHandler.findByName(username)
+        owner = self.__getUserByID(ownerID)
+        user = self.__getUserByName(username)
 
         chatroom.unbanUser(owner, user)
 
@@ -244,6 +248,8 @@ class ChatSystem:
 
             if user is None:
                 raise UserNotFoundException
+            else:
+                return user
         except DBException:
             raise GenericServerException
 
@@ -263,6 +269,8 @@ class ChatSystem:
 
             if user is None:
                 raise UserNotFoundException
+            else:
+                return user
         except DBException:
             raise GenericServerException
 
@@ -274,7 +282,10 @@ class ChatSystem:
     # Exceptions:
     #   MessageFormatException
     def __formatMessage(self, message):
-        pass
+        if len(message) < 200:
+            return message
+        else:
+            return message[:200]
 
     # Checks the formatting of the username, throws exception if there is a problem
     # Input:
@@ -282,7 +293,10 @@ class ChatSystem:
     # Exceptions:
     #   UsernameFormatException
     def __formatUsername(self, username):
-        pass
+        match = self.userRE.search(username)
+
+        if match is None:
+            raise UsernameFormatException
 
     # Checks the formatting of the password, throws exception if there is a problem
     # Input:
@@ -290,7 +304,10 @@ class ChatSystem:
     # Exceptions:
     #   PasswordFormatException
     def __formatPassword(self, password):
-        pass
+        match = self.passwordRE.search(password)
+
+        if match is None:
+            raise PasswordFormatException
 
     # Checks the formatting of the chatroom name, throws exception if there is a problem
     # Input:
@@ -298,7 +315,10 @@ class ChatSystem:
     # Exceptions:
     #   ChatroomFormatException
     def __formatChatroomName(self, chatroomName):
-        pass
+        match = self.chatroomRE.search(chatroomName)
+
+        if match is None:
+            raise ChatroomFormatException
 
     # gets the current time
     # Returns:

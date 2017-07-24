@@ -1,39 +1,40 @@
-from log_in import dbHandler
-from log_in import DuplicateNameException
-from log_in import IDNotExistException
-import urlparse
-import psycopg2
-import logging
-import unittest 
-from User import User 
+from DBHandler import *
+#from DBHandlerImpl import DBHandlerImpl
+from DBHandlerInMem import DBHandlerInMem
+import unittest
 
 class Test_log_in(unittest.TestCase):
-    
+
+    def getDBHandler(self):
+        return DBHandlerInMem()
+
     def truncate(self,db):
-        connection= db.con
-        cur=connection.cursor()
-        cur.execute("truncate log_in;")
-        connection.commit()
-        cur.close()
+        pass
+        #if db is DBHandlerImpl:
+            #connection= db.con
+            #cur=connection.cursor()
+            #cur.execute("truncate log_in;")
+            #connection.commit()
+            #cur.close()
       
     #""" test for insert function  """
     def test_insert(self):  
 
-        db = dbHandler()
+        db = self.getDBHandler()
         self.truncate(db)
         self.assertIsInstance(db.insert('1234','4321'),int)
         db.close()
        
     def test_insert_Exception(self):
         
-        db = dbHandler()
+        db = self.getDBHandler()
         self.truncate(db)
         self.assertIsInstance(db.insert('1234','4321'),int)
         self.assertRaises(DuplicateNameException,db.insert,'1234','4321')
 
     """ test for finfByID function """
     def test_findByID(self):
-        db=dbHandler()
+        db=self.getDBHandler()
         self.truncate(db)
         db.insert('j','k')
         the_id=db.insert('m','l')
@@ -44,7 +45,7 @@ class Test_log_in(unittest.TestCase):
 #
     """ test for finfByName function """
     def test_findByName(self):
-        db=dbHandler()
+        db=self.getDBHandler()
         self.truncate(db)
         db.insert('j','k')
         the_id=db.insert('m','l')
@@ -55,7 +56,7 @@ class Test_log_in(unittest.TestCase):
      
     """ test for updateUser function """
     def test_updateUser(self):
-        db=dbHandler()
+        db=self.getDBHandler()
         self.truncate(db)
         the_id=db.insert('j','k')
         db.updateUser(the_id,'p','s')
@@ -65,7 +66,7 @@ class Test_log_in(unittest.TestCase):
    
     
     def test_updateUser_DuplicateNameException(self):
-        db=dbHandler()
+        db=self.getDBHandler()
         self.truncate(db)
         db.insert('j','k')
         the_id=db.insert('u','o')
@@ -73,7 +74,7 @@ class Test_log_in(unittest.TestCase):
         db.close()
     
     def test_updateUser_IDNotExistException(self):
-        db=dbHandler()
+        db=self.getDBHandler()
         self.truncate(db)
         self.assertRaises(IDNotExistException,db.updateUser,1,'j','s')
         db.close()

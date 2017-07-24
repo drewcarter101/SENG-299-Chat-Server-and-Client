@@ -1,8 +1,14 @@
 import unittest
 from ChatSystem import *
+from Chatroom import *
 import time
 
 class ChatSystemTest (unittest.TestCase):
+
+    def setUp(self):
+        dbHandler.usersByName = {}
+        dbHandler.usersByID = {}
+
     def testInit(self):
         chatSystem = ChatSystem()
 
@@ -104,7 +110,7 @@ class ChatSystemTest (unittest.TestCase):
         try:
             chatSystem.login(username, password)
             self.fail()
-        except DuplicateUsernameException:
+        except UserNotFoundException:
             pass
 
     def testAddChatroom(self):
@@ -115,10 +121,14 @@ class ChatSystemTest (unittest.TestCase):
 
         userID = chatSystem.signup(username, password)
 
+        self.assertIsInstance(userID, int)
+
         chatSystem.addChatroom(userID, chatroomName)
 
         self.assertEqual(len(chatSystem.chatrooms), 2)
-        self.assertIsNone(chatSystem.chatrooms[chatroomName])
+        chatroom = chatSystem.chatrooms[chatroomName]
+        self.assertEqual(userID, chatroom.owner.id)
+
 
     def testAddChatroomDuplicate(self):
         chatSystem = ChatSystem()
@@ -211,6 +221,8 @@ class ChatSystemTest (unittest.TestCase):
 
         userID = chatSystem.signup(username, password)
 
+        chatSystem.addChatroom(userID, chatroomName)
+
         try:
             chatSystem.joinChatroom(chatroomName, userID + 1)
             self.fail()
@@ -231,7 +243,7 @@ class ChatSystemTest (unittest.TestCase):
         chatSystem.banUser(ownerID, chatroomName, username)
 
         try:
-            chatSystem.joinChatroom(chatroomName, userID + 1)
+            chatSystem.joinChatroom(chatroomName, userID)
             self.fail()
         except UserBannedException:
             pass
@@ -334,20 +346,6 @@ class ChatSystemTest (unittest.TestCase):
 
         self.assertRaises(NotOwnerException, chatSystem.unbanUser, userID, chatroomName, ownername)
 
-    def testUnbanUserBanOwner(self):
-        chatSystem = ChatSystem()
-        ownername = 'owner'
-        username = 'cam'
-        password = 'password'
-        chatroomName = 'camsPlace'
-
-        ownerID = chatSystem.signup(ownername, password)
-        userID = chatSystem.signup(username, password)
-
-        chatSystem.addChatroom(ownerID, chatroomName)
-
-        self.assertRaises(UserIsOwnerException, chatSystem.unbanUser, ownerID, chatroomName, ownername)
-
     def testUnbanUserUserNotFound(self):
         chatSystem = ChatSystem()
         ownername = 'owner'
@@ -425,7 +423,7 @@ class ChatSystemTest (unittest.TestCase):
         messages = chatSystem.getMessagesByIndex(chatroomName, userID, 0)
         self.assertEqual(len(messages), 9)
 
-        messages = chatSystem.getMessagesByTime(chatroomName, ownerID, None)
+        messages = chatSystem.getMessagesByIndex(chatroomName, ownerID, None)
         self.assertEqual(len(messages), 10)
 
     def testGetMessageByIndexExceptions(self):
@@ -446,31 +444,8 @@ class ChatSystemTest (unittest.TestCase):
         self.assertRaises(UserNotFoundException, chatSystem.getMessagesByIndex, chatroomName, userID + 10, -1)
         self.assertRaises(ChatroomDoesNotExistException, chatSystem.getMessagesByIndex, chatroomName + '2', ownerID, -1)
 
-        chatSystem.banUser(ownerID, chatroomName, userID)
+        chatSystem.banUser(ownerID, chatroomName, username)
         self.assertRaises(UserBannedException, chatSystem.getMessagesByIndex, chatroomName, userID, -1)
-
-    def testGetMessageByTime(self):
-        chatSystem = ChatSystem()
-        ownername = 'owner'
-        username = 'cam'
-        password = 'password'
-        chatroomName = 'camsPlace'
-
-        ownerID = chatSystem.signup(ownername, password)
-        userID = chatSystem.signup(username, password)
-
-        chatSystem.addChatroom(ownerID, chatroomName)
-        for i in xrange(10):
-            chatSystem.addMessage(chatroomName, ownerID, 'message' + str(i))
-
-        time.sleep(61)
-        for i in xrange(10, 20):
-            chatSystem.addMessage(chatroomName, ownerID, 'message' + str(i))
-
-        messages = chatSystem.getMessagesByTime(chatroomName,ownerID)
-
-        self.assertEqual(messages(0), 19)
-        self.assertEquals(len(messages(1)), 10)
 
     def testGetMessageByTimeExceptions(self):
         chatSystem = ChatSystem()
@@ -513,7 +488,30 @@ class ChatSystemTest (unittest.TestCase):
         ownerID = chatSystem.signup(ownername, password)
         userID = chatSystem.signup(username, password)
 
-        self.assertRaises(DuplicateUsernameException, chatSystem.set_alias, ownerID, username)
-        self.assertRaises(UserNotFoundException, chatSystem.set_alias, userID + 10, username + '2')
+        self.assertRaises(DuplicateUsernameException, chatSystem.set_alias, ownerID, username, password)
+        self.assertRaises(UserNotFoundException, chatSystem.set_alias, userID + 10, username + '2', password)
+
+    def testGetMessageByTime(self):
+        chatSystem = ChatSystem()
+        ownername = 'owner'
+        username = 'cam'
+        password = 'password'
+        chatroomName = 'camsPlace'
+
+        ownerID = chatSystem.signup(ownername, password)
+        userID = chatSystem.signup(username, password)
+
+        chatSystem.addChatroom(ownerID, chatroomName)
+        for i in xrange(10):
+            chatSystem.addMessage(chatroomName, ownerID, 'message' + str(i))
+
+        time.sleep(61)
+        for i in xrange(10, 20):
+            chatSystem.addMessage(chatroomName, ownerID, 'message' + str(i))
+
+        messages = chatSystem.getMessagesByTime(chatroomName,ownerID)
+
+        self.assertEqual(messages[0], 19)
+        self.assertEquals(len(messages[1]), 10)
 
 unittest.main()

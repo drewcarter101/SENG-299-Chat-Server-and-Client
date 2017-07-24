@@ -128,7 +128,8 @@ class Chatroom:
     #   bool
     def __userIsBanned(self, user):
         try:
-            return self.bannedUsers[user.id]
+            user = self.bannedUsers[user.id]
+            return True
         except KeyError:
             return False
 

@@ -58,7 +58,7 @@ class Controller:
     def set_alias(self, userID, password, newUsername):
         try:
             self.__authenticateByID(userID, password)
-            self.chatSystem.set_alias(userID, newUsername)
+            self.chatSystem.set_alias(userID, newUsername, password)
             return self.responseFactory.ok()
         except Exception as e:
             return self.handleException(e)
@@ -104,11 +104,11 @@ class Controller:
             return self.handleException(e)
 
     def __authenticateByID(self,userID, password):
-        if not self.authenticator.authenticateByID(userID, password)
+        if not self.authenticator.authenticateByID(userID, password):
             raise InvalidCredentialsException
 
     def __authenticateByName(self, username, password):
-        if not self.authenticator.authenticateByName(username, password)
+        if not self.authenticator.authenticateByName(username, password):
             raise InvalidCredentialsException
 
     def handleException(self, e):
