@@ -17,16 +17,28 @@ class MessageUpdater:
         self.chatroom=Chatroom
         self.input=Input
 
-        self.run()
+        return self.run()
     
     def run(self):
         self.response = self.wrapper.get(self.userid, self.password, self.chatroom)["responseType"]
-        if self.response == "Ok"
-        
+        if self.response == "Blocked":
+            self.blocked()
+            return {"Type": "error", "response": self.response}
+        elif self.response == "ChatroomDoesNotExist":
+            self.chatroomDeleted()
+            return {"Type": "error", "response": self.response}
+        elif self.response == "InvalidCredentials":
+            return {"Type": "error", "response": self.response}
+        elif self.response == "ParametersMissing":
+            return {"Type": "error", "response": self.response}
+        else:
+            return {"Type": "Ok", "response": self.response}
 
     def blocked(self):
+        csi.setCurrentChatroom("general")
         return
 
     def chatroomDeleted(self):
+        csi.setCurrentChatroom("general")
         return
 

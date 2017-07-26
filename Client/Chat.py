@@ -13,9 +13,8 @@ from MessageUpdater import MessageUpdater as MessageUpdater
 class Chat():
 
     def __init__(self):
-        self.ClientUsername=""
-
-        self.messages={}
+        self.ClientUsername
+        self.wrapper=ServerWrapper()
         self.notTryingSignUp=True
 
         self.credential_errors={"InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
@@ -25,21 +24,14 @@ class Chat():
         with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
             self.helpText=myfile.read()
 
-            
-
-    def sign_up(self, username,password):
-        #placeholder for method in serverwrapper
-        return "Ok"
-
-    def login(self, username,password):
-        #placeholder for method in serverwrapper
-        return "Ok"
-
-    def set_alias(self, username, password, newUsername):
-        #if bad
-        ##return credential_Error[error message]
-        #if successful change clientusername to newusername
-        return "Name succesfully changed!\n"
+    def set_alias(self, userid, password, newUsername):
+        tempResponse= self.wrapper.set_alias(userid,password,newUsername)["responseType"]:
+        if tempResponse == "Ok":
+            self.ClientUsername = newUsername
+            return "Name succesfully changed!\n"
+        else:
+            return self.credential_errors[tempResponse]
+        
 
     def peformAction(self, command, value):
         if command=="set_alias":
@@ -66,22 +58,22 @@ class Chat():
                 self.quit()
             elif tempPass=="/help":
                 print self.helpText
-            if self.login(tempUser, tempPass)== "Ok" and self.notTryingSignUp:
+            if self.wrapper.login(tempUser, tempPass)== "Ok" and self.notTryingSignUp:
                 self.ClientUsername=tempUser
                 print "Login complete!"
                 break
-            elif self.login(tempUser, tempPass) == "InvalidCredentials":
+            elif self.wrapper.login(tempUser, tempPass) == "InvalidCredentials":
                 if self.notTryingSignUp: print self.credential_errors["Invalid_pairing"]
                 response= raw_input("Press 's' to sign up as a new user or press any key to retry login\n")
                 if response== 's':
                     self.notTryingSignUp=False
                     print "Beginnng sign up process..."
-                    if self.sign_up(tempUser, tempPass)=="Ok":
+                    if self.wrapper.signup(tempUser, tempPass)=="Ok":
                         self.ClientUsername=tempUser
                         print "Sign up complete, you are now logged in"
                         break
                     else:
-                        print self.credential_errors[sign_up(tempUser, tempPass)]
+                        print self.credential_errors[self.wrapper.signup(tempUser, tempPass)]
                 elif response=="/quit":
                     self.quit()
                 elif response=="/help":
@@ -90,6 +82,7 @@ class Chat():
                 print "Invalid entry"
 
         #Main Program loop
+        self.lastUpdate=None
         print "\nWhat do you want to do now?"
         while True: 
             input_list= raw_input(">> ")
@@ -105,25 +98,14 @@ class Chat():
                 else:
                     print self.system_errors[output["response"]]
 
-            self.msgUpdater=MessageUpdater(cred.getCredentials(), csi.getCurrentChatroom(), output)
+            self.msgUpdater=MessageUpdater(cred.getCredentials(), csi.getCurrentChatroom(), output, self.lastUpdate)
 
-                #else send output to server to decide what to do next
-                #server_Send(output)
-                #result=json.loads(server.recieve())
-                #if result["requestType"]=="normal":
-                    #add result["message"] to list of self.messages:
-                    #self.messages[result["message"] ]="unseen"
-                #else:
-                    #print errors[result["message"]]
-                print(output["value"])
-            #result=json.loads(server.recieve())
-            #if result["requestType"]=="normal":
-                #add result["message"] to list of self.messages:
-                #self.messages[result["message"] ]="unseen"
-            #for key, value in self.messages.iteritems() :
-                #if value=="unseen":
-                    #print key
-                    #value="seen"
+            if self.msgUpdater["Type"]=="error":
+                print self.system_errors[self.msgUpdater["response"]]
+            else:
+                self.lastUpdate=self.msgUpdater["response"][0]
+                for i in self.msgUpdater["response"][1]:
+                    print i
 
     def quit(self):
         sys.exit()
