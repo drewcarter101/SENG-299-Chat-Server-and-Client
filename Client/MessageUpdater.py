@@ -27,12 +27,12 @@ class MessageUpdater():
                 chatroom = self.__getChatroom()
 
                 if self.lastChatroom != chatroom:
-                    lastUpdate = None
+                    self.lastUpdate = None
 
                 userID = self.clientStateInfo.credentials.userID
                 password = self.clientStateInfo.credentials.password
 
-                (self.lastUpdate,messages) = self.serverWrapper.get(userID, password, chatroom)
+                (self.lastUpdate,messages) = self.serverWrapper.get(userID, password, chatroom, self.lastUpdate)
 
                 if self.__sameChatroom(chatroom):
                     for message in messages:
