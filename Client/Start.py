@@ -4,7 +4,6 @@ import sys
 import re
 import json
 from ServerWrapper import ServerWrapper
-from InputHandler import InputHandler
 
 class Start():
 	def __init__(self):
@@ -14,8 +13,8 @@ class Start():
 			self.helpText=myfile.read()
         
 		self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
-		self.handler=InputHandler()
 		self.wrapper=ServerWrapper()
+		self.notTryingSignUp=True
 		
         print "Welcome! Type '/quit' to exit or '/help' for assistance."
         print "Login/sign-up below:\n"
@@ -32,7 +31,6 @@ class Start():
             elif tempPass=="/help":
                 print self.helpText
             if self.wrapper.login(tempUser, tempPass)== "Ok" and self.notTryingSignUp:
-                self.handler.ClientUsername=tempUser
                 print "Login complete!"
                 break
             elif self.wrapper.login(tempUser, tempPass) == "InvalidCredentials":
@@ -42,7 +40,6 @@ class Start():
                     self.notTryingSignUp=False
                     print "Beginnng sign up process..."
                     if self.wrapper.signup(tempUser, tempPass)=="Ok":
-                        self.handler.ClientUsername=tempUser
                         print "Sign up complete, you are now logged in"
                         break
                     else:
