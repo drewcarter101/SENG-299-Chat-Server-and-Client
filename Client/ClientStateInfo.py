@@ -1,11 +1,6 @@
-import sys
-import re
-import json
 
-chatroom=""
 
-def getCurrentChatroom():
-    return chatroom
-
-def setCurrentChatroom(room):
-    chatroom=room
+class ClientStateInfo:
+    def __init__(self, credentials, chatroom):
+        self.credentials = credentials
+        self.chatroom = chatroom

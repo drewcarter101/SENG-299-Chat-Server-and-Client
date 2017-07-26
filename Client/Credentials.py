@@ -1,9 +1,6 @@
-import sys
-import re
-import json
 
-userID=0
-password=""
 
-def getCredentials():
-    return {"userID": userID, "password": password}
+class Credentials:
+    def __init__(self, userID, password):
+        self.userID = userID
+        self.password = password

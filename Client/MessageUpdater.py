@@ -1,43 +1,62 @@
-import sys
-import os
-import re
-import json
-import ClientStateInfo as csi
-from ServerWrapper import ServerWrapper as ServerWrapper
+import threading
+import time
+from ServerWrapper import BlockedException, ChatroomDoesNotExistException
 
 class MessageUpdater():
-    ServerLocation ='localhost'
-    Port= 9321
 
-    def __init__(self, Credentials, Chatroom, Input, LastUpdate=None):
-        self.wrapper=ServerWrapper()
-        self.userid=Credentials["userID"]
-        self.password=Credentials["password"]
-        self.chatroom=Chatroom
-        self.input=Input
+    __DELAY = .1
 
-        return self.run()
+    def __init__(self, serverWrapper, clientStateInfo, Chat):
+        self.serverWrapper = serverWrapper
+        self.clientStateInfo = clientStateInfo
+        self.chat = Chat
     
     def run(self):
-        self.response = self.wrapper.get(self.userid, self.password, self.chatroom)["responseType"]
-        if self.response == "Blocked":
-            self.blocked()
-            return {"Type": "error", "response": self.response}
-        elif self.response == "ChatroomDoesNotExist":
-            self.chatroomDeleted()
-            return {"Type": "error", "response": self.response}
-        elif self.response == "InvalidCredentials":
-            return {"Type": "error", "response": self.response}
-        elif self.response == "ParametersMissing":
-            return {"Type": "error", "response": self.response}
-        else:
-            return {"Type": "Ok", "response": self.response}
+        self.stop = False
+        thread = threading.Thread(target=self.__getNewMessages)
+        thread.start()
+        self.lastUpdate = None
+        self.lastChatroom = self.clientStateInfo.chatroom
 
-    def blocked(self):
-        csi.setCurrentChatroom("general")
-        return
 
-    def chatroomDeleted(self):
-        csi.setCurrentChatroom("general")
-        return
+    def __getNewMessages(self):
+        while True:
+            if self.stop:
+                return
+            try:
+                chatroom = self.__getChatroom()
+
+                if self.lastChatroom != chatroom:
+                    lastUpdate = None
+
+                userID = self.clientStateInfo.credentials.userID
+                password = self.clientStateInfo.credentials.password
+
+                (self.lastUpdate,messages) = self.serverWrapper.get(userID, password, chatroom)
+
+                if self.__sameChatroom(chatroom):
+                    for message in messages:
+                        print message
+            except BlockedException, ChatroomDoesNotExistException:
+                self.__blocked()
+            except:
+                print 'An error has occured while attempting to retrieve messages'
+
+            if self.stop:
+                return
+
+            self.lastChatroom = self.__getChatroom()
+            time.sleep(self.__DELAY)
+
+    def __sameChatroom(self,chatroom):
+        return self.clientStateInfo.chatroom == chatroom
+
+    def __changeChatroom(self):
+        self.clientStateInfo.chatroom = self.chat.__GENERAL_CHATROOM
+
+    def __getChatroom(self):
+        return self.clientStateInfo.chatroom
+
+    def quit(self):
+        self.stop = True
 
