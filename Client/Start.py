@@ -4,6 +4,8 @@ import sys
 import re
 import json
 from ServerWrapper import ServerWrapper
+from Chat import Chat
+from ClientStateInfo import ClientStateInfo
 
 class Start():
 	def __init__(self):
@@ -50,6 +52,10 @@ class Start():
                     print self.helpText
             else: 
                 print "Invalid entry"
+				
+		self.csi=ClientStateInfo()
+		self.chat=Chat(self.csi.credentials, self.wrapper)
+		self.chat.run()
 				
 	def quit(self):
         sys.exit()
