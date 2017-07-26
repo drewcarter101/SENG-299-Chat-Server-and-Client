@@ -107,10 +107,7 @@ class InputHandler():
 
     def set_alias(self, userid, password, newUsername):
         tempResponse= self.wrapper.set_alias(userid,password,newUsername)["responseType"]
-        if tempResponse == "Ok":
-            return "Name succesfully changed!\n"
-        else:
-            return self.credential_errors[tempResponse]
+        return self.credential_errors[tempResponse]
         
 
     def peformAction(self, command, value):
@@ -137,7 +134,6 @@ class InputHandler():
             else:
 			   print self.system_errors[output["response"]]
             
-
     def quit(self):
         sys.exit()
 	
