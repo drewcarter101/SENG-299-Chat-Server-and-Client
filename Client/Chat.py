@@ -7,6 +7,8 @@ import json
 from InputHandler import InputHandler as InputHandler
 import Credentials as cred
 import ClientStateInfo as csi
+from ServerWrapper import ServerWrapper as ServerWrapper
+from MessageUpdater import MessageUpdater as MessageUpdater
 
 class Chat():
 
@@ -16,12 +18,13 @@ class Chat():
         self.messages={}
         self.notTryingSignUp=True
 
-        self.credential_errors={"InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username"}#fill in later
-        
+        self.credential_errors={"InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
+        self.system_errors{"InvalidCredentials": "Your user credentials are invalid", "ParametersMissing" : "ParametersMissing", "Blocked": "You have been blocked from this chatroom", "ChatroomDoesNotExist": "Sorry, this chatroom does not exist", "InvalidMessage": "Your missage is invalid", "DuplicateChatroom": "This chatroom already exists", "UserDoesNotExist": "This User does not exist", "NotOwner": "You are not the owner of this chatroom, only owners can perform this operation", "UserNotOnList": "This user was never blocked"}
         #Help text
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
         with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
             self.helpText=myfile.read()
+
             
 
     def sign_up(self, username,password):
@@ -91,12 +94,19 @@ class Chat():
         while True: 
             input_list= raw_input(">> ")
             parser=InputHandler(input_list.split(" "), cred.getCredentials(), csi.getCurrentChatroom(), self.ClientUsername)
-            output= json.loads(parser.to_json())
+            output= parser.to_dict()
             if output["Type"]=="client_command":
                 self.peformAction(output["requestType"], output["value"])
             elif output["Type"]=="error":
                 print output["value"]
-            else:
+            else: 
+                if output["response"] == "Ok":
+                    print "success"
+                else:
+                    print self.system_errors[output["response"]]
+
+            self.msgUpdater=MessageUpdater(cred.getCredentials(), csi.getCurrentChatroom(), output)
+
                 #else send output to server to decide what to do next
                 #server_Send(output)
                 #result=json.loads(server.recieve())
