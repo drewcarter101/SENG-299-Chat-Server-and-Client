@@ -90,20 +90,20 @@ class InputHandler():
         else:
             self.output= self.send_message(input, input_list, errors, user_data, chatroom, username)
 			
-		return self.output
+        return self.output
 			
-	def __init__(self):
+    def __init__(self):
         self.ClientUsername=""
         self.wrapper=ServerWrapper()
         self.notTryingSignUp=True
 
-        self.credential_errors={"InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
-        self.system_errors={"InvalidCredentials": "Your user credentials are invalid", "ParametersMissing" : "ParametersMissing", "Blocked": "You have been blocked from this chatroom", "ChatroomDoesNotExist": "Sorry, this chatroom does not exist", "InvalidMessage": "Your missage is invalid", "DuplicateChatroom": "This chatroom already exists", "UserDoesNotExist": "This User does not exist", "NotOwner": "You are not the owner of this chatroom, only owners can perform this operation", "UserNotOnList": "This user was never blocked"}
+        self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
+        self.system_errors={"Ok": "Success","InvalidCredentials": "Your user credentials are invalid", "ParametersMissing" : "ParametersMissing", "Blocked": "You have been blocked from this chatroom", "ChatroomDoesNotExist": "Sorry, this chatroom does not exist", "InvalidMessage": "Your missage is invalid", "DuplicateChatroom": "This chatroom already exists", "UserDoesNotExist": "This User does not exist", "NotOwner": "You are not the owner of this chatroom, only owners can perform this operation", "UserNotOnList": "This user was never blocked"}
         #Help text
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
         with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
             self.helpText=myfile.read()
-		self.run()
+        self.run()
 
     def set_alias(self, userid, password, newUsername):
         tempResponse= self.wrapper.set_alias(userid,password,newUsername)["responseType"]
@@ -171,15 +171,10 @@ class InputHandler():
                 self.peformAction(output["requestType"], output["value"])
             elif output["Type"]=="error":
                 print output["value"]
-            else: 
-                if output["response"] == "Ok":
-                    print "success"
-                else:
-                    print self.system_errors[output["response"]]
+            else:
+			   print self.system_errors[output["response"]]
             
 
     def quit(self):
         sys.exit()
 	
-	
-
