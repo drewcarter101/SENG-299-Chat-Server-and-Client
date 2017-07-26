@@ -13,19 +13,19 @@ from MessageUpdater import MessageUpdater as MessageUpdater
 class Chat():
 
     def __init__(self):
-        self.ClientUsername
+        self.ClientUsername=""
         self.wrapper=ServerWrapper()
         self.notTryingSignUp=True
 
         self.credential_errors={"InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
-        self.system_errors{"InvalidCredentials": "Your user credentials are invalid", "ParametersMissing" : "ParametersMissing", "Blocked": "You have been blocked from this chatroom", "ChatroomDoesNotExist": "Sorry, this chatroom does not exist", "InvalidMessage": "Your missage is invalid", "DuplicateChatroom": "This chatroom already exists", "UserDoesNotExist": "This User does not exist", "NotOwner": "You are not the owner of this chatroom, only owners can perform this operation", "UserNotOnList": "This user was never blocked"}
+        self.system_errors={"InvalidCredentials": "Your user credentials are invalid", "ParametersMissing" : "ParametersMissing", "Blocked": "You have been blocked from this chatroom", "ChatroomDoesNotExist": "Sorry, this chatroom does not exist", "InvalidMessage": "Your missage is invalid", "DuplicateChatroom": "This chatroom already exists", "UserDoesNotExist": "This User does not exist", "NotOwner": "You are not the owner of this chatroom, only owners can perform this operation", "UserNotOnList": "This user was never blocked"}
         #Help text
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
         with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
             self.helpText=myfile.read()
 
     def set_alias(self, userid, password, newUsername):
-        tempResponse= self.wrapper.set_alias(userid,password,newUsername)["responseType"]:
+        tempResponse= self.wrapper.set_alias(userid,password,newUsername)["responseType"]
         if tempResponse == "Ok":
             self.ClientUsername = newUsername
             return "Name succesfully changed!\n"

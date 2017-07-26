@@ -3,14 +3,13 @@ import os
 import re
 import json
 import ClientStateInfo as csi
-import Chat as chat
 from ServerWrapper import ServerWrapper as ServerWrapper
 
-class MessageUpdater:
+class MessageUpdater():
     ServerLocation ='localhost'
     Port= 9321
 
-    def __init__(self, Credentials, Chatroom,LastUpdate=None, Input):
+    def __init__(self, Credentials, Chatroom, Input, LastUpdate=None):
         self.wrapper=ServerWrapper()
         self.userid=Credentials["userID"]
         self.password=Credentials["password"]

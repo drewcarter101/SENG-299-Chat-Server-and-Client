@@ -2,7 +2,7 @@ import sys
 import re
 import json
 
-chatroom
+chatroom=""
 
 def getCurrentChatroom():
     return chatroom
