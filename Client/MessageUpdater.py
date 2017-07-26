@@ -38,7 +38,7 @@ class MessageUpdater():
                     for message in messages:
                         print message
             except BlockedException, ChatroomDoesNotExistException:
-                self.__blocked()
+                self.__exitChatroom()
             except:
                 print 'An error has occured while attempting to retrieve messages'
 
@@ -51,7 +51,7 @@ class MessageUpdater():
     def __sameChatroom(self,chatroom):
         return self.clientStateInfo.chatroom == chatroom
 
-    def __changeChatroom(self):
+    def __exitChatroom(self):
         self.clientStateInfo.chatroom = self.chat.__GENERAL_CHATROOM
 
     def __getChatroom(self):
