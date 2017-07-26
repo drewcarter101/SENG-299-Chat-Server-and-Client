@@ -5,6 +5,7 @@ import sys
 import re
 import json
 from ServerWrapper import ServerWrapper as ServerWrapper
+import ClientStateInfo as csi
 from colorama import init
 from colorama import Fore, Back, Style
 init()
@@ -30,10 +31,14 @@ class InputHandler():
 
             if data["requestType"] == "join":
                 data["response"] == self.wrapper.join(user_data["userID"],user_data["password"],chatroom)["responseType"]
+                if data["response"] == "Ok":
+                    csi.setCurrentChatroom(chatroom)
 
             elif data["requestType"] == "create":
                 data["response"] == self.wrapper.create(user_data["userID"],user_data["password"],chatroom)["responseType"]
-
+                if data["response"] == "Ok":
+                    csi.setCurrentChatroom(chatroom)
+                    
             elif data["requestType"] == "block":
                 data["response"] == self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
 
@@ -42,6 +47,8 @@ class InputHandler():
 
             elif data["requestType"] == "delete":
                 data["response"] == self.wrapper.delete(user_data["userID"],user_data["password"],chatroom)["responseType"]
+                if data["response"] == "Ok":
+                    csi.setCurrentChatroom("general")
         return data
 
     def send_message(self, message, input_list, errors, user_data, chatroom, username):
