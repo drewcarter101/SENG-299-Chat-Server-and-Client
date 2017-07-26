@@ -4,6 +4,8 @@
 import sys
 import re
 import json
+import threading
+import time
 from ServerWrapper import ServerWrapper as ServerWrapper
 import ClientStateInfo as csi
 import Credentials as cred
@@ -120,20 +122,28 @@ class InputHandler():
         return
 
     def run(self):
-
+		self.stop = False
+        thread = threading.Thread(target=self.__recieveInput)
+        thread.start()
+		
+    def __recieveInput(self):
         #Main Program loop
         print "\nWhat do you want to do now?"
         while True: 
+            if self.stop:
+                return
             input_list= raw_input(">> ")
-			credObj={"userID": self.cred.userID, "password": self.cred.password}
+            credObj={"userID": self.cred.userID, "password": self.cred.password}
             output=self.parser(input_list.split(" "), credObj, self.csi.chatroom)
             if output["Type"]=="client_command":
-                self.peformAction(output["requestType"], output["value"])
+				self.peformAction(output["requestType"], output["value"])
+				if self.stop:
+					return
             elif output["Type"]=="error":
                 print output["value"]
             else:
 			   print self.system_errors[output["response"]]
             
     def quit(self):
-        sys.exit()
+		self.stop = True
 	
