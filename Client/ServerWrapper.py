@@ -13,7 +13,7 @@ class ServerWrapper:
     def connect(self,port):
         try:
             self.s=socket.socket()
-           # host = socket.gethostname()
+           #host = socket.gethostname()
             host=socket.gethostbyname(self.ServerLocation)
             self.s.connect((host,port))
         except IOError:
@@ -62,13 +62,14 @@ class ServerWrapper:
       
         reply= self.receive_and_parse(data)
         outcome=reply["responseType"]
+        lastUpdate=reply['lastUpdate']
         if outcome =="Ok":
 
             message_list=[]
             for item in reply["messages"]:
                 message=Message(item["username"],item["text"])           
                 message_list.append(message) 
-            return message_list   
+            return (lastUpdate,message_list)   
         else:
             return self.exceptions(outcome)
            
@@ -141,13 +142,14 @@ class ServerWrapper:
         
 
     def receive_and_parse(self,data):
-        request=json.dumps(data)
-        self.s.send(request)
-        reply=json.loads(self.s.recv(2048))
-        self.s.close()
-        print reply
-        return reply 
-        
+        try:
+            request=json.dumps(data)
+            self.s.send(request)
+            reply=json.loads(self.s.recv(2048))
+            self.s.close()
+            return reply 
+        except Exception:
+            raise failed_recv_Exception
 
     def exceptions(self,string):
         if string =='requestTypeMissing':
@@ -180,13 +182,26 @@ class ServerWrapper:
             raise parameterFormatErrorException
         elif string=='invalidChatroom':
             raise invalidChatroomException
+        elif string =='bloked':
+            raise blockedException
+        else:
+            raise undefinedException
 
 
 
 
 class connectionFailedException(Exception):
     pass
-    
+
+class failed_recv_Exception(Exception):
+    pass
+
+class undefinedException(Exception):
+    pass
+
+class blockedException(Exception):
+    pass
+
 class requestTypeMissingException(Exception):
     pass
     
