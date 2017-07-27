@@ -7,6 +7,8 @@ import os
 from ServerWrapper import *
 from Chat import Chat
 from ClientStateInfo import ClientStateInfo
+from Constant import GENERAL_CHATROOM
+from Credentials import *
 
 class Start():
 	def __init__(self):
@@ -35,7 +37,8 @@ class Start():
 				print self.helpText
 				
 			try:
-				if self.wrapper.login(tempUser, tempPass) and self.notTryingSignUp:
+				if self.notTryingSignUp:
+					self.userId=self.wrapper.login(tempUser, tempPass) 
 					print "Login complete!"
 					break
 			except ServerWrapperException:
@@ -46,7 +49,7 @@ class Start():
 					self.notTryingSignUp=False
 					print "Beginnng sign up process..."
 					try:
-						if self.wrapper.signup(tempUser, tempPass):
+							self.userId = self.wrapper.signup(tempUser, tempPass)
 							print "Sign up complete, you are now logged in"
 							break
 					except ServerWrapperException:
@@ -56,8 +59,9 @@ class Start():
 				elif response=="/help":
 					print self.helpText
 		
-		
-		self.chat=Chat((tempUser, tempPass), self.wrapper)
+		self.cred= Credentials(self.userId, tempPass)
+		self.csi=ClientStateInfo(self.cred, GENERAL_CHATROOM)
+		self.chat=Chat(self.csi, self.wrapper)
 		self.chat.run()
 		
 	def quit(self):
