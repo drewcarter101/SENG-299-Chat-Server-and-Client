@@ -114,11 +114,13 @@ class InputHandler():
             self.output= self.send_message(input, input_list, errors, user_data, chatroom)
 			
         return self.output
+		
 			
     def __init__(self, serverWrapper, clientStateInfo):
 		self.wrapper=serverWrapper
 		self.csi=clientStateInfo
 		self.cred=self.csi.credentials
+        self.chat = Chat
 		
 		self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
 		#self.system_errors={"Ok": "Success","InvalidCredentials": "Your user credentials are invalid", "ParametersMissing" : "ParametersMissing", "Blocked": "You have been blocked from this chatroom", "ChatroomDoesNotExist": "Sorry, this chatroom does not exist", "InvalidMessage": "Your missage is invalid", "DuplicateChatroom": "This chatroom already exists", "UserDoesNotExist": "This User does not exist", "NotOwner": "You are not the owner of this chatroom, only owners can perform this operation", "UserNotOnList": "This user was never blocked"}
@@ -144,10 +146,15 @@ class InputHandler():
 
     def run(self):
 		self.stop = False
-		thread = threading.Thread(target=self.__recieveInput)
-		thread.start()
+        self.lastUpdate = None
+        self.lastChatroom = self.clientStateInfo.chatroom
+        self.thread = threading.Thread(target=self.__handleInput)
+
+        #allows the program to close regardless of it this thread is running
+        self.thread.daemon = True
+        self.thread.start()
 		
-    def __recieveInput(self):
+    def __handleInput(self):
         #Main Program loop
         print "\nWhat do you want to do now?"
         while True: 
@@ -168,6 +175,6 @@ class InputHandler():
 				else:
 					print "An error has occured while attempting to perform the operation"
             
-    def quit(self):
-		self.stop = True
+     def quit(self):
+        sys.exit()
 	
