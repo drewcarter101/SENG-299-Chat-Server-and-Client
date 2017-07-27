@@ -15,7 +15,7 @@ class Start():
 		with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
 			self.helpText=myfile.read()
 		self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
-		self.wrapper=ServerWrapper()
+		self.wrapper=ServerWrapper("location")
 		self.notTryingSignUp=True
 		
 		print "Welcome! Type '/quit' to exit or '/help' for assistance."
@@ -55,8 +55,9 @@ class Start():
 					self.quit()
 				elif response=="/help":
 					print self.helpText
-		self.csi=ClientStateInfo()
-		self.chat=Chat(self.csi.credentials, self.wrapper)
+		
+		
+		self.chat=Chat((tempUser, tempPass), self.wrapper)
 		self.chat.run()
 		
 	def quit(self):
