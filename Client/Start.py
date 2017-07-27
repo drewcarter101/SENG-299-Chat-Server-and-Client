@@ -11,11 +11,14 @@ from Constant import GENERAL_CHATROOM
 from Credentials import *
 
 class Start():
+	
+	
 	def __init__(self):
 		#Help text
 		__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 		with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
 			self.helpText=myfile.read()
+			
 		self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
 		
 		self.wrapper=ServerWrapper(sys.argv)
@@ -70,3 +73,6 @@ class Start():
 		
 	def quit(self):
 		sys.exit()
+		
+if __name__ == "__main__":
+    start=Start()
