@@ -111,11 +111,11 @@ class InputHandler():
         return self.output
 
 
-    def __init__(self, serverWrapper, clientStateInfo):
+    def __init__(self, serverWrapper, clientStateInfo, chat):
 		self.wrapper=serverWrapper
 		self.csi=clientStateInfo
 		self.cred=self.csi.credentials
-		self.chat = Chat
+		self.chat = chat
 
 		self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
 		#self.system_errors={"Ok": "Success","InvalidCredentials": "Your user credentials are invalid", "ParametersMissing" : "ParametersMissing", "Blocked": "You have been blocked from this chatroom", "ChatroomDoesNotExist": "Sorry, this chatroom does not exist", "InvalidMessage": "Your missage is invalid", "DuplicateChatroom": "This chatroom already exists", "UserDoesNotExist": "This User does not exist", "NotOwner": "You are not the owner of this chatroom, only owners can perform this operation", "UserNotOnList": "This user was never blocked"}
