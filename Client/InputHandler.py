@@ -52,14 +52,14 @@ class InputHandler():
                     
             elif data["requestType"] == "block":
 		try:
-                	data["response"] = self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
+            data["response"] = self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
 		except ServerWrapperException:
 			data["response"]=False
                 	
 			
             elif data["requestType"] == "unblock":
 		try:
-                	data["response"] = self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
+             data["response"] = self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
 		except ServerWrapperException:
 			data["response"]=False
 			
@@ -86,8 +86,8 @@ class InputHandler():
             data["Type"]="normal"
             data["value"] = message + "\033[22m \033[39m"
 		try:
-            		data["response"] = self.wrapper.send(user_data["userID"],user_data["password"],chatroom, data["value"])["responseType"]
-        	except ServerWrapperException:
+			data["response"] = self.wrapper.send(user_data["userID"],user_data["password"],chatroom, data["value"])["responseType"]
+		except ServerWrapperException:
 			data["response"]=False
 	return data
 		
