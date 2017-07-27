@@ -6,7 +6,8 @@ import re
 import json
 import threading
 import time
-from ServerWrapper import ServerWrapper as ServerWrapper
+import os
+from ServerWrapper import *
 import ClientStateInfo as csi
 import Credentials as cred
 from colorama import init
@@ -35,8 +36,6 @@ class InputHandler():
             if data["requestType"] == "join":
 		try:
 			data["response"] = self.wrapper.join(user_data["userID"],user_data["password"],chatroom)["responseType"]
-			if data["response"]:
-			    csi.setCurrentChatroom(chatroom)
 		except ServerWrapperException:
 			data["response"]=False
 
@@ -44,8 +43,6 @@ class InputHandler():
             elif data["requestType"] == "create":
 		try:
 			data["response"] = self.wrapper.create(user_data["userID"],user_data["password"],chatroom)["responseType"]
-			if data["response"]:
-			    csi.setCurrentChatroom(chatroom)
 		except ServerWrapperException:
 			data["response"]=False
 
@@ -66,8 +63,6 @@ class InputHandler():
             elif data["requestType"] == "delete":
 		try:
 			data["response"] = self.wrapper.delete(user_data["userID"],user_data["password"],chatroom)["responseType"]
-			if data["response"]:
-			    csi.setCurrentChatroom("general")
 		except ServerWrapperException:
 			data["response"]=False
 
@@ -147,7 +142,7 @@ class InputHandler():
     def run(self):
 		self.stop = False
 		self.lastUpdate = None
-		self.lastChatroom = self.clientStateInfo.chatroom
+		self.lastChatroom = self.csi.chatroom
 		self.thread = threading.Thread(target=self.__handleInput)
 		#allows the program to close regardless of it this thread is running
 		self.thread.daemon = True
