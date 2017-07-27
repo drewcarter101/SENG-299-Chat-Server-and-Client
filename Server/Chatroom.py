@@ -8,6 +8,14 @@ class Chatroom:
         self.bannedUsers = {}
         self.messages = []
 
+    # user joins the chatroom
+    # Input:
+    #   user : User : Not None
+    # Exceptions:
+    #   UserBannedException
+    def join(self, user):
+        self.__assertUnbanned(user)
+
     # Adds a message to the chatroom
     # Input:
     #   message : Message : Not None
@@ -67,18 +75,19 @@ class Chatroom:
     #   start : Int : Not None
     #   user : User : Not None
     # Returns:
-    #   [Message]
+    #   (lastUpdate,[Message])
     # Exceptions:
-    #   NotOwnerException
+    #   UserBannedException
     def getMessagesByIndex(self, start, user):
         self.__assertUnbanned(user)
         if start < 0:
-            return self.messages
+            messages = self.messages
         elif len(self.messages) < 1 or start >= len(self.messages):
-            return []
+            messages = []
         else:
-            return self.messages[start+1:]
+            messages = self.messages[start+1:]
 
+        return (len(self.messages) - 1, messages)
     # bans user from the chatroom
     # Input:
     #   owner : User : Not None
@@ -120,7 +129,8 @@ class Chatroom:
     #   bool
     def __userIsBanned(self, user):
         try:
-            return self.bannedUsers[user.id]
+            user = self.bannedUsers[user.id]
+            return True
         except KeyError:
             return False
 
@@ -165,14 +175,14 @@ class Chatroom:
         if self.__userIsBanned(user):
             raise UserBannedException
 
-class NotOwnerException:
+class NotOwnerException(Exception):
     pass
 
-class UserBannedException:
+class UserBannedException(Exception):
     pass
 
-class UserNotBannedException:
+class UserNotBannedException(Exception):
     pass
 
-class UserIsOwnerException:
+class UserIsOwnerException(Exception):
     pass

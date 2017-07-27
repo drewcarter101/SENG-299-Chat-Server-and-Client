@@ -17,7 +17,7 @@ class ChatroomTest(unittest.TestCase):
         chatroom.addMessage(message)
         messages = chatroom.getMessagesByIndex(-1, owner)
 
-        self.assertMessageListEquals(messages, [Message(owner,messageText,messageTime)])
+        self.assertMessageListEquals(messages[1], [Message(owner,messageText,messageTime)])
 
     def testAddMessageFromNotFromOwner(self):
         owner = User("ownername", 123, "password")
@@ -31,7 +31,7 @@ class ChatroomTest(unittest.TestCase):
         chatroom.addMessage(message)
         messages = chatroom.getMessagesByIndex(-1, user)
 
-        self.assertMessageListEquals(messages, [Message(user, messageText, messageTime)])
+        self.assertMessageListEquals(messages[1], [Message(user, messageText, messageTime)])
 
 
     def testAddMessageFromBannedUser(self):
@@ -45,7 +45,9 @@ class ChatroomTest(unittest.TestCase):
 
         chatroom.addMessage(message)
         messages = chatroom.getMessagesByIndex(-1, owner)
+        self.assertEqual(messages[0], 0)
 
+        messages = messages[1]
         self.assertEqual(len(messages), 1)
         receivedMessage = messages[0]
         self.assertEqual(receivedMessage.user.name, user.name)
@@ -82,14 +84,20 @@ class ChatroomTest(unittest.TestCase):
 
         #Get from middle of list
         messages = chatroom.getMessagesByIndex(2, user)
+        self.assertEqual(messages[0], 5)
+        messages = messages[1]
         self.assertMessageListEquals(messages,[message3, message4, message5])
 
         #Get from end of list
         messages = chatroom.getMessagesByIndex(5, user)
+        self.assertEqual(messages[0], 5)
+        messages = messages[1]
         self.assertMessageListEquals(messages, [])
 
         #Get from beyond end of list
         messages = chatroom.getMessagesByIndex(6, user)
+        self.assertEqual(messages[0], 5)
+        messages = messages[1]
         self.assertMessageListEquals(messages, [])
 
     def testGetMessagesByTimeBanned(self):
@@ -184,7 +192,7 @@ class ChatroomTest(unittest.TestCase):
         messages = chatroom.getMessagesByIndex(-1, user)
 
         # user is not banned yet, should be able to see chat
-        self.assertMessageListEquals(messages, [Message(owner, messageText, messageTime)])
+        self.assertMessageListEquals(messages[1], [Message(owner, messageText, messageTime)])
 
         chatroom.banUser(owner, user)
 
@@ -229,7 +237,7 @@ class ChatroomTest(unittest.TestCase):
         chatroom.addMessage(message)
         messages = chatroom.getMessagesByIndex(-1, user1)
 
-        self.assertMessageListEquals(messages, [Message(owner, messageText, messageTime)])
+        self.assertMessageListEquals(messages[1], [Message(owner, messageText, messageTime)])
 
         #Only owner should be able to ban users
         try:
@@ -240,7 +248,7 @@ class ChatroomTest(unittest.TestCase):
 
         messages = chatroom.getMessagesByIndex(-1, user2)
 
-        self.assertMessageListEquals(messages, [Message(owner, messageText, messageTime)])
+        self.assertMessageListEquals(messages[1], [Message(owner, messageText, messageTime)])
 
     def testUnbanUser(self):
         owner = User(123, "ownername", "password")
@@ -259,7 +267,7 @@ class ChatroomTest(unittest.TestCase):
 
         messages = chatroom.getMessagesByIndex(-1, user)
 
-        self.assertMessageListEquals(messages, [Message(owner, messageText, messageTime)])
+        self.assertMessageListEquals(messages[1], [Message(owner, messageText, messageTime)])
 
     def testBanUnbanBan(self):
         owner = User(123, "ownername", "password")
@@ -355,6 +363,27 @@ class ChatroomTest(unittest.TestCase):
             chatroom.banUser(owner, user)
             self.fail()
         except NotOwnerException:
+            pass
+
+    def testJoin(self):
+        owner = None
+        user = User(1234, "username", "password")
+        roomName = "general"
+        chatroom = Chatroom(roomName, owner)
+
+        chatroom.join(user)
+
+    def testJoinBanned(self):
+        owner = User("ownername", 123, "password")
+        user = User(1234, "username", "password")
+        roomName = "general"
+        chatroom = Chatroom(roomName, owner)
+        chatroom.banUser(owner, user)
+
+        try:
+            chatroom.join(user)
+            self.fail()
+        except UserBannedException:
             pass
 
     #Helper method, checks that 2 message lists are the same
