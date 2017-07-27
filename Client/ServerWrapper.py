@@ -12,125 +12,145 @@ class ServerWrapper:
             
 
     def login(self,Username,Password):
-        data={'requestType':'login', 'username': Username, 'password': Password} 
-        reply=self.receive_and_parse(data)
-        outcome=reply["responseType"]
-        if outcome =="Ok":
-            
-            return reply["userID"]
-        
-        else:
-            
-            return self.exceptions(outcome)
-        
+        try:
+            data={'requestType':'login', 'username': Username, 'password': Password} 
+            reply=self.receive_and_parse(data)
+            outcome=reply["responseType"]
+            if outcome =="Ok":            
+                return reply["userID"]
+            else:
+                return self.exceptions(outcome)
+        except KeyError:
+            raise BadResponseException 
+
 
     def signup(self,Username,Password):
-    
-        data = {'requestType':'signup', 'username': Username, 'password': Password}
-        reply=self.receive_and_parse(data)
-        outcome=reply["responseType"]
-        if outcome =="Ok":
-            return reply["userID"]
-        else:
-            return self.exceptions(outcome)
-    
+        try:
+            data = {'requestType':'signup', 'username': Username, 'password': Password}
+            reply=self.receive_and_parse(data)
+            outcome=reply["responseType"]
+            if outcome =="Ok":
+                return reply["userID"]
+            else:
+                return self.exceptions(outcome)
+        except KeyError:
+            raise BadResponseException 
+
+
     def send(self,UserID,Password,Chatroom,Message):
-        
-        data = {'requestType':'send', 'userID': UserID, 'password': Password,'chatroom':Chatroom,'message':Message}
-        reply=self.receive_and_parse(data)  
-        outcome=reply["responseType"]
-        if outcome =="Ok":
-            return True
-        else:
-            return self.exceptions(outcome)
-    
+        try:
+            data = {'requestType':'send', 'userID': UserID, 'password': Password,'chatroom':Chatroom,'message':Message}
+            reply=self.receive_and_parse(data)  
+            outcome=reply["responseType"]
+            if outcome =="Ok":
+                return True
+            else:
+                return self.exceptions(outcome)
+        except KeyError:
+            raise BadResponseException 
+
+
     def get(self,UserID,Password,Chatroom,LastUpdate=None):
-    
-        if LastUpdate is None:
-            data = {'requestType':'get', 'userID': UserID, 'password': Password,'chatroom':Chatroom}
-        else:
-            data = {'requestType':'get', 'userID': UserID, 'password': Password,'chatroom':Chatroom,'lastUpdate':LastUpdate}
+        try:
+            if LastUpdate is None:
+                data = {'requestType':'get', 'userID': UserID, 'password': Password,'chatroom':Chatroom}
+            else:
+                data = {'requestType':'get', 'userID': UserID, 'password': Password,'chatroom':Chatroom,'lastUpdate':LastUpdate}
       
-        reply= self.receive_and_parse(data)
-        outcome=reply["responseType"]
+            reply= self.receive_and_parse(data)
+            outcome=reply["responseType"]
 
-        if outcome =="Ok":
-            lastUpdate = reply['lastUpdate']
-            message_list=[]
-            for item in reply["messages"]:
-                message=Message(item["username"],item["text"])           
-                message_list.append(message) 
-            return (lastUpdate,message_list)   
-        else:
-            return self.exceptions(outcome)
-           
+            if outcome =="Ok":
+                lastUpdate = reply['lastUpdate']
+                message_list=[]
+                for item in reply["messages"]:
+                    message=Message(item["username"],item["text"])           
+                    message_list.append(message) 
+                return (lastUpdate,message_list)   
+            else:
+                return self.exceptions(outcome)
+        except KeyError:
+            raise BadResponseException 
     
-    def set_alias(self,UserID,Password,NewUsername):
 
-        data = {'requestType':'set_alias', 'userID': UserID, 'password': Password,'newUsername':NewUsername}
-        reply= self.receive_and_parse(data)
-        outcome=reply["responseType"]
-        if outcome =="Ok":
-             return True
-        else:
-            return self.exceptions(outcome)
-        
+    def set_alias(self,UserID,Password,NewUsername):
+        try:
+            data = {'requestType':'set_alias', 'userID': UserID, 'password': Password,'newUsername':NewUsername}
+            reply= self.receive_and_parse(data)
+            outcome=reply["responseType"]
+            if outcome =="Ok":
+                return True
+            else:
+                return self.exceptions(outcome)
+        except KeyError:
+            raise BadResponseException 
+
 
     def join(self,UserID,Password,Chatroom):
-        
-        data = {'requestType':'join', 'userID': UserID, 'password': Password,'chatroom':Chatroom}
-        reply= self.receive_and_parse(data)
-        outcome=reply["responseType"]
-        if outcome =="Ok":
-             return True
-        else:
-            return self.exceptions(outcome)
-        
+        try:
+            data = {'requestType':'join', 'userID': UserID, 'password': Password,'chatroom':Chatroom}
+            reply= self.receive_and_parse(data)
+            outcome=reply["responseType"]
+            if outcome =="Ok":
+                return True
+            else:
+                return self.exceptions(outcome)
+        except KeyError:
+            raise BadResponseException 
+
 
     def create(self,UserID,Password,Chatroom):
-        
-        data = {'requestType':'create', 'userID': UserID, 'password': Password,'chatroom':Chatroom}
-        reply= self.receive_and_parse(data)
-        outcome=reply["responseType"]
-        if outcome =="Ok":
-             return True
-        else:
-            return self.exceptions(outcome)
-        
+        try:
+            data = {'requestType':'create', 'userID': UserID, 'password': Password,'chatroom':Chatroom}
+            reply= self.receive_and_parse(data)
+            outcome=reply["responseType"]
+            if outcome =="Ok":
+                return True
+            else:
+                return self.exceptions(outcome)
+        except KeyError:
+            raise BadResponseException 
+
 
     def block(self,UserID,Password,UserToBlock,Chatroom):
-    
-        data = {'requestType':'block', 'userID': UserID, 'password': Password,'chatroom':Chatroom,'userToBlock':UserToBlock}
-        reply= self.receive_and_parse(data)
-        outcome=reply["responseType"]
-        if outcome =="Ok":
-             return True
-        else:
-            return self.exceptions(outcome)
-    
+        try:
+            data = {'requestType':'block', 'userID': UserID, 'password': Password,'chatroom':Chatroom,'userToBlock':UserToBlock}
+            reply= self.receive_and_parse(data)
+            outcome=reply["responseType"]
+            if outcome =="Ok":
+                return True
+            else:
+                return self.exceptions(outcome)
+        except KeyError:
+            raise BadResponseException 
+
 
     def unblock(self,UserID,Password,UserToUnblock,Chatroom):
-        
-        data = {'requestType':'unblock', 'userID': UserID, 'password': Password,'chatroom':Chatroom,'userToUnblock':UserToUnblock}
-        reply= self.receive_and_parse(data)
-        outcome=reply["responseType"]
-        if outcome =="Ok":
-             return True
-        else:
-            return self.exceptions(outcome)
-        
+        try:
+            data = {'requestType':'unblock', 'userID': UserID, 'password': Password,'chatroom':Chatroom,'userToUnblock':UserToUnblock}
+            reply= self.receive_and_parse(data)
+            outcome=reply["responseType"]
+            if outcome =="Ok":
+                return True
+            else:
+                return self.exceptions(outcome)
+        except KeyError:
+            raise BadResponseException 
+
 
     def delete(self,UserID,Password,Chatroom):
+        try:
+            data = {'requestType':'delete', 'userID': UserID, 'password': Password,'chatroom':Chatroom}
+            reply= self.receive_and_parse(data)
+            outcome=reply["responseType"]
         
-        data = {'requestType':'delete', 'userID': UserID, 'password': Password,'chatroom':Chatroom}
-        reply= self.receive_and_parse(data)
-        outcome=reply["responseType"]
-        
-        if outcome =="Ok":
-             return True
-        else:
-            return self.exceptions(outcome)
-        
+            if outcome =="Ok":
+                return True
+            else:
+                return self.exceptions(outcome)
+        except KeyError:
+            raise BadResponseException 
+
 
     def receive_and_parse(self,data):
         try:
@@ -138,6 +158,7 @@ class ServerWrapper:
             requestString = json.dumps(data)
 
             host = socket.gethostname()
+            #host=socket.gethostbyname('localhost')
             port = 9321
 
             s.connect((host, port))
@@ -145,8 +166,10 @@ class ServerWrapper:
 
             response = s.recv(2048)
             return json.loads(response)
+
         except Exception:
             raise failed_recv_Exception
+
 
     def exceptions(self,string):
         if string =='RequestTypeMissing':
@@ -187,7 +210,9 @@ class ServerWrapper:
 
 
 
-class connectionFailedException(Exception):
+
+
+class BadResponseException(Exception):
     pass
 
 class failed_recv_Exception(Exception):
