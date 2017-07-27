@@ -8,8 +8,8 @@ class Chat:
 
     def __init__(self, credentials, serverWrapper):
         clientStateInfo = ClientStateInfo(credentials,GENERAL_CHATROOM)
-        self.messageUpdater = MessageUpdater(serverWrapper, clientStateInfo)
-        self.inputHandler = InputHandler(serverWrapper, clientStateInfo)
+        self.messageUpdater = MessageUpdater(serverWrapper, clientStateInfo, self)
+        self.inputHandler = InputHandler(serverWrapper, clientStateInfo, self)
 
     def run(self):
         self.messageUpdater.run()
