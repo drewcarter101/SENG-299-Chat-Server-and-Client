@@ -51,7 +51,7 @@ class Start():
 			except ServerWrapperException:
 				if self.notTryingSignUp:
 					print self.credential_errors["Invalid_pairing"]
-				response= raw_input("Press 's' to sign up as a new user or press any key to retry login\n")
+				response= raw_input("Press 's' to sign up as a new user with the credentials you enetered or press any key to retry login\n")
 				if response== 's':
 					self.notTryingSignUp=False
 					print "Beginnng sign up process..."
