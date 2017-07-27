@@ -32,26 +32,28 @@ class Start():
                 self.quit()
             elif tempPass=="/help":
                 print self.helpText
-            if self.wrapper.login(tempUser, tempPass)== "Ok" and self.notTryingSignUp:
-                print "Login complete!"
-                break
-            elif self.wrapper.login(tempUser, tempPass) == "InvalidCredentials":
-				if self.notTryingSignUp: print self.credential_errors["Invalid_pairing"]
-				response= raw_input("Press 's' to sign up as a new user or press any key to retry login\n")
-				if response== 's':
-					self.notTryingSignUp=False
-					print "Beginnng sign up process..."
-					if self.wrapper.signup(tempUser, tempPass)=="Ok":
-						print "Sign up complete, you are now logged in"
-						break
-					else:
-						print self.credential_errors[self.wrapper.signup(tempUser, tempPass)]
-				elif response=="/quit":
-					self.quit()
-				elif response=="/help":
-					print self.helpText
-            else:
-				print "Invalid entry"
+				
+			try:
+				if self.wrapper.login(tempUser, tempPass) and self.notTryingSignUp:
+					print "Login complete!"
+					break
+			except ServerWrapperException:
+					if self.notTryingSignUp: print self.credential_errors["Invalid_pairing"]
+					response= raw_input("Press 's' to sign up as a new user or press any key to retry login\n")
+					if response== 's':
+						self.notTryingSignUp=False
+						print "Beginnng sign up process..."
+						try:
+							if self.wrapper.signup(tempUser, tempPass):
+								print "Sign up complete, you are now logged in"
+								break
+						except ServerWrapperException:
+							print "An error has occured while attempting to perform the operation"
+					elif response=="/quit":
+						self.quit()
+					elif response=="/help":
+						print self.helpText
+				
 				
 		
         self.csi=ClientStateInfo()
