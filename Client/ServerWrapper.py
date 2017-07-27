@@ -164,7 +164,10 @@ class ServerWrapper:
             s.connect((host, port))
             s.send(requestString)
 
+            #print data
+
             response = s.recv(2048)
+            #print response
             return json.loads(response)
 
         except Exception:
@@ -210,63 +213,64 @@ class ServerWrapper:
 
 
 
-
-
-class BadResponseException(Exception):
+class ServerWrapperException(Exception):
     pass
 
-class failed_recv_Exception(Exception):
+class BadResponseException(ServerWrapperException):
     pass
 
-class undefinedException(Exception):
+class failed_recv_Exception(ServerWrapperException):
     pass
 
-class blockedException(Exception):
+class undefinedException(ServerWrapperException):
     pass
 
-class requestTypeMissingException(Exception):
+class blockedException(ServerWrapperException):
+    pass
+
+class requestTypeMissingException(ServerWrapperException):
     pass
     
-class requestFormatErrorException(Exception):
+class requestFormatErrorException(ServerWrapperException):
     pass
 
-class duplicateUsernameException(Exception):
+class duplicateUsernameException(ServerWrapperException):
     pass
 
-class invalidUsernameException(Exception):
+class invalidUsernameException(ServerWrapperException):
     pass
 
-class invalidPasswordException(Exception):
+class invalidPasswordException(ServerWrapperException):
     pass
 
-class parametersMissingException(Exception):
+class parametersMissingException(ServerWrapperException):
     pass
 
-class invalidCredentialsException(Exception):
+class invalidCredentialsException(ServerWrapperException):
     pass
 
-class invalidMessageException(Exception):
+class invalidMessageException(ServerWrapperException):
     pass
 
-class chatroomDoesNotExistException(Exception):
+class chatroomDoesNotExistException(ServerWrapperException):
     pass
 
-class duplicateChatrooomException(Exception):
+class duplicateChatrooomException(ServerWrapperException):
     pass
 
-class userDoesNotExistException(Exception):
+class userDoesNotExistException(ServerWrapperException):
     pass
 
-class notOwnerException(Exception):
+class notOwnerException(ServerWrapperException):
     pass
 
-class userNotOnListException(Exception):
+class userNotOnListException(ServerWrapperException):
     pass
 
-class parameterFormatErrorException(Exception):
+class parameterFormatErrorException(ServerWrapperException):
     pass
 
-class invalidChatroomException(Exception):
+class invalidChatroomException(ServerWrapperException):
     pass
 
 

@@ -21,6 +21,8 @@ messageUpdater.run()
 for i in xrange(20):
     serverWrapper.send(ownerID,password,chatroom, 'message' + str(i))
 
+time.sleep(5)
+
 serverWrapper.delete(ownerID,password, chatroom)
 
 time.sleep(5)
