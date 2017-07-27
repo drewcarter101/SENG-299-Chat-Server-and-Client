@@ -1,6 +1,7 @@
 import threading
 import time
-from ServerWrapper import BlockedException, ChatroomDoesNotExistException
+from ServerWrapper import *
+from Constant import GENERAL_CHATROOM
 
 class MessageUpdater():
 
@@ -13,10 +14,10 @@ class MessageUpdater():
     
     def run(self):
         self.stop = False
-        thread = threading.Thread(target=self.__getNewMessages)
-        thread.start()
         self.lastUpdate = None
         self.lastChatroom = self.clientStateInfo.chatroom
+        thread = threading.Thread(target=self.__getNewMessages)
+        thread.start()
 
 
     def __getNewMessages(self):
@@ -37,9 +38,13 @@ class MessageUpdater():
                 if self.__sameChatroom(chatroom):
                     for message in messages:
                         print message
-            except BlockedException, ChatroomDoesNotExistException:
+            except blockedException:
                 self.__exitChatroom()
-            except:
+                print 'Blocked from current chatroom. Moving to default chatroom'
+            except chatroomDoesNotExistException:
+                self.__exitChatroom()
+                print 'Current chatroom has been deleted. Moving to default chatroom'
+            except undefinedException:
                 print 'An error has occured while attempting to retrieve messages'
 
             if self.stop:
@@ -52,7 +57,7 @@ class MessageUpdater():
         return self.clientStateInfo.chatroom == chatroom
 
     def __exitChatroom(self):
-        self.clientStateInfo.chatroom = self.chat.__GENERAL_CHATROOM
+        self.clientStateInfo.chatroom = GENERAL_CHATROOM
 
     def __getChatroom(self):
         return self.clientStateInfo.chatroom

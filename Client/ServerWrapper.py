@@ -6,18 +6,9 @@ class ServerWrapper:
     ServerLocation ='localhost'
     Port= 9321
 
-    def __init__(self):
-        self.connect(self.Port)
-    
+    def __init__(self, location):
+        self.ServerLocation = location
 
-    def connect(self,port):
-        try:
-            self.s=socket.socket()
-           #host = socket.gethostname()
-            host=socket.gethostbyname(self.ServerLocation)
-            self.s.connect((host,port))
-        except IOError:
-            raise connectionFailedException 
             
 
     def login(self,Username,Password):
@@ -62,9 +53,9 @@ class ServerWrapper:
       
         reply= self.receive_and_parse(data)
         outcome=reply["responseType"]
-        lastUpdate=reply['lastUpdate']
-        if outcome =="Ok":
 
+        if outcome =="Ok":
+            lastUpdate = reply['lastUpdate']
             message_list=[]
             for item in reply["messages"]:
                 message=Message(item["username"],item["text"])           
@@ -143,46 +134,52 @@ class ServerWrapper:
 
     def receive_and_parse(self,data):
         try:
-            request=json.dumps(data)
-            self.s.send(request)
-            reply=json.loads(self.s.recv(2048))
-            self.s.close()
-            return reply 
+            s = socket.socket()
+            requestString = json.dumps(data)
+
+            host = socket.gethostname()
+            port = 9321
+
+            s.connect((host, port))
+            s.send(requestString)
+
+            response = s.recv(2048)
+            return json.loads(response)
         except Exception:
             raise failed_recv_Exception
 
     def exceptions(self,string):
-        if string =='requestTypeMissing':
+        if string =='RequestTypeMissing':
             raise requestTypeMissingException
-        elif string =='requestFormatError':
+        elif string =='RequestFormatError':
             raise requestFormatErrorException 
-        elif string == 'duplicateUsername':
+        elif string == 'DuplicateUsername':
             raise duplicateUsernameException
-        elif string == 'invalidUsername':
+        elif string == 'InvalidUsername':
             raise invalidUsernameException
-        elif string=='invalidPassword':
+        elif string=='InvalidPassword':
             raise invalidPasswordException
-        elif string=='parametersMissing':
+        elif string=='ParametersMissing':
             raise parametersMissingException 
-        elif string=='invalidCredentials':
+        elif string=='InvalidCredentials':
             raise invalidCredentialsException
-        elif string=='invalidMessage':
+        elif string=='InvalidMessage':
             raise invalidMessageException
-        elif string=='chatroomDoesNotExist':
+        elif string=='ChatroomDoesNotExist':
             raise chatroomDoesNotExistException
-        elif string=='duplicateChatrooom':
+        elif string=='DuplicateChatrooom':
             raise duplicateChatrooomException
-        elif string=='userDoesNotExist':
+        elif string=='UserDoesNotExist':
             raise userDoesNotExistException
-        elif string=='notOwner':
+        elif string=='NotOwner':
             raise notOwnerException
-        elif string=='userNotOnList':
+        elif string=='UserNotOnList':
             raise userNotOnListException 
-        elif string=='parameterFormatError':
+        elif string=='ParameterFormatError':
             raise parameterFormatErrorException
-        elif string=='invalidChatroom':
+        elif string=='InvalidChatroom':
             raise invalidChatroomException
-        elif string =='bloked':
+        elif string =='Blocked':
             raise blockedException
         else:
             raise undefinedException

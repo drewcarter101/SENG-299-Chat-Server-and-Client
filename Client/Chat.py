@@ -2,12 +2,12 @@
 from MessageUpdater import MessageUpdater
 from InputHandler import InputHandler
 from ClientStateInfo import ClientStateInfo
+from Constant import GENERAL_CHATROOM
 
 class Chat:
-    __GENERAL_CHATROOM = 'general'
 
     def __init__(self, credentials, serverWrapper):
-        clientStateInfo = ClientStateInfo(credentials,self.__GENERAL_CHATROOM)
+        clientStateInfo = ClientStateInfo(credentials,GENERAL_CHATROOM)
         self.messageUpdater = MessageUpdater(serverWrapper, clientStateInfo)
         self.inputHandler = InputHandler(serverWrapper, clientStateInfo)
 

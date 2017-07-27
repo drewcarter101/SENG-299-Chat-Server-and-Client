@@ -2,7 +2,7 @@ from MessageUpdater import MessageUpdater
 from ClientStateInfo import ClientStateInfo
 from ServerWrapper import ServerWrapper
 from Credentials import Credentials
-from Chat import Chat
+import socket
 import time
 
 username = 'messageUpdaterTest'
@@ -10,14 +10,12 @@ password = 'password'
 chatroom = 'messageUpChat'
 ownerName = 'UpChatOwner'
 
-serverWrapper = ServerWrapper()
+serverWrapper = ServerWrapper('127.0.0.1')
 userID = serverWrapper.signup(username,password)
 ownerID = serverWrapper.signup(ownerName,password)
 serverWrapper.create(ownerID,password,chatroom)
 clientStateInfo = ClientStateInfo(Credentials(userID,password),'messageUpChat')
-
-messageUpdater = MessageUpdater(serverWrapper,clientStateInfo,Chat)
-
+messageUpdater = MessageUpdater(serverWrapper,clientStateInfo,None)
 messageUpdater.run()
 
 for i in xrange(20):
