@@ -10,17 +10,17 @@ Main Commands:
 8) /quit ------------------- Exit client program
  
 Formatting:
-1) :b [text] b: - Allows the user to bolden text.
-2) :u [text] u: - Allows the user to underline text.
-3) :h [text] h: - Allows the user to highlight text. Highlight changes the text color to red.
+1) :b [text] b: ------------ Allows the user to bolden text.
+2) :u [text] u: ------------ Allows the user to underline text.
+3) :h [text] h: ------------ Allows the user to highlight text. Highlight changes the text color to red.
  
  
 Emoticons:
-1) :happy: ------ Posts the smiley face emoji
-2) :sad: -------- Posts the sad face emoji
-3) :angry: ------ Posts the angry face emoji
-4) :bored: ------ Posts the bored face emoji
-5) :thumbsup: --- Posts the thumbs up emoji
-6) :thumbsdown: - Posts the thumbs down emoji
-7) :highfive: --- Posts the high five emoji
+1) :happy: ----------------- Posts the smiley face emoji
+2) :sad: ------------------- Posts the sad face emoji
+3) :angry: ----------------- Posts the angry face emoji
+4) :bored: ----------------- Posts the bored face emoji
+5) :thumbsup: -------------- Posts the thumbs up emoji
+6) :thumbsdown: ------------ Posts the thumbs down emoji
+7) :highfive: -------------- Posts the high five emoji
 
