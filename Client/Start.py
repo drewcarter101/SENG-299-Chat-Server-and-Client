@@ -67,8 +67,7 @@ class Start():
 					print self.helpText
 		
 		self.cred= Credentials(self.userId, tempPass)
-		self.csi=ClientStateInfo(self.cred, GENERAL_CHATROOM)
-		self.chat=Chat(self.csi, self.wrapper)
+		self.chat=Chat(self.cred, self.wrapper)
 		self.chat.run()
 		
 	def quit(self):
