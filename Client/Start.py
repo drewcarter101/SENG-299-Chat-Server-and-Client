@@ -3,7 +3,8 @@
 import sys
 import re
 import json
-from ServerWrapper import ServerWrapper
+import os
+from ServerWrapper import *
 from Chat import Chat
 from ClientStateInfo import ClientStateInfo
 
@@ -58,5 +59,5 @@ class Start():
 		self.chat=Chat(self.csi.credentials, self.wrapper)
 		self.chat.run()
 		
-		def quit(self):
-			sys.exit()
+	def quit(self):
+		sys.exit()
