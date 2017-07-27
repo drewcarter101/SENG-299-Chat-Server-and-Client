@@ -21,10 +21,10 @@ class InputHandler():
         data = {}
 
         data["requestType"] = commands[0]
-        
-        if len(commands)>1: 
+
+        if len(commands)>1:
             data["value"]=commands[1]
-        else: 
+        else:
             data["value"]=None
 
         if commands[0] in self.chatroom_commands[5:]:
@@ -39,7 +39,7 @@ class InputHandler():
 			    csi.setCurrentChatroom(chatroom)
 		except ServerWrapperException:
 			data["response"]=False
-                	
+
 
             elif data["requestType"] == "create":
 		try:
@@ -48,21 +48,21 @@ class InputHandler():
 			    csi.setCurrentChatroom(chatroom)
 		except ServerWrapperException:
 			data["response"]=False
-                	
-                    
+
+
             elif data["requestType"] == "block":
 		try:
-            data["response"] = self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
+			data["response"] = self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
 		except ServerWrapperException:
 			data["response"]=False
-                	
-			
+
+
             elif data["requestType"] == "unblock":
 		try:
-             data["response"] = self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
+			data["response"] = self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
 		except ServerWrapperException:
 			data["response"]=False
-			
+
             elif data["requestType"] == "delete":
 		try:
 			data["response"] = self.wrapper.delete(user_data["userID"],user_data["password"],chatroom)["responseType"]
@@ -70,12 +70,12 @@ class InputHandler():
 			    csi.setCurrentChatroom("general")
 		except ServerWrapperException:
 			data["response"]=False
-			
+
         return data
 
     def send_message(self, message, input_list, errors, user_data, chatroom):
         data = {}
-        
+
         if message[0]=="/":
             data["Type"]="error"
             if input_list[0][1:] in self.chatroom_commands:
@@ -83,14 +83,14 @@ class InputHandler():
             else:
                 data["value"] = errors["invalid_command"].format(input_list[0])
         else:
-            data["Type"]="normal"
-            data["value"] = message + "\033[22m \033[39m"
-		try:
-			data["response"] = self.wrapper.send(user_data["userID"],user_data["password"],chatroom, data["value"])["responseType"]
-		except ServerWrapperException:
-			data["response"]=False
+			data["Type"]="normal"
+			data["value"] = message + "\033[22m \033[39m"
+			try:
+				data["response"] = self.wrapper.send(user_data["userID"],user_data["password"],chatroom, data["value"])["responseType"]
+			except ServerWrapperException:
+				data["response"]=False
 	return data
-		
+
 
     def parser(self, input_list, user_data, chatroom):
         self.chatroom_commands =["join","create","block", "unblock", "delete","set_alias", "help", "quit"]
@@ -100,28 +100,28 @@ class InputHandler():
         input=" ".join([formats.get(item, item) for item in input_list])
 
         pattern1="^/(?:({})) ([A-Za-z0-9_]+)$".format("|".join(self.chatroom_commands))
-        pattern2="^/(?:({}))$".format("|".join(self.chatroom_commands[6:])) 
-        general_pattern="(?:{}|{})".format(pattern1, pattern2) 
+        pattern2="^/(?:({}))$".format("|".join(self.chatroom_commands[6:]))
+        general_pattern="(?:{}|{})".format(pattern1, pattern2)
         #highlight_Pattern=":h (.*?) h:"
-		
+
 
         command_input=re.search(general_pattern, input)
 
-        
+
         if command_input is not None:
             self.output=self.send_command([command_input.group(1), command_input.group(2), command_input.group(3)], user_data, chatroom)
         else:
             self.output= self.send_message(input, input_list, errors, user_data, chatroom)
-			
+
         return self.output
-		
-			
+
+
     def __init__(self, serverWrapper, clientStateInfo):
 		self.wrapper=serverWrapper
 		self.csi=clientStateInfo
 		self.cred=self.csi.credentials
-        self.chat = Chat
-		
+		self.chat = Chat
+
 		self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
 		#self.system_errors={"Ok": "Success","InvalidCredentials": "Your user credentials are invalid", "ParametersMissing" : "ParametersMissing", "Blocked": "You have been blocked from this chatroom", "ChatroomDoesNotExist": "Sorry, this chatroom does not exist", "InvalidMessage": "Your missage is invalid", "DuplicateChatroom": "This chatroom already exists", "UserDoesNotExist": "This User does not exist", "NotOwner": "You are not the owner of this chatroom, only owners can perform this operation", "UserNotOnList": "This user was never blocked"}
 		#Help text
@@ -133,7 +133,7 @@ class InputHandler():
     def set_alias(self, userid, password, newUsername):
         tempResponse= self.wrapper.set_alias(userid,password,newUsername)["responseType"]
         return self.credential_errors[tempResponse]
-        
+
 
     def peformAction(self, command, value):
         if command=="set_alias":
@@ -146,18 +146,17 @@ class InputHandler():
 
     def run(self):
 		self.stop = False
-        self.lastUpdate = None
-        self.lastChatroom = self.clientStateInfo.chatroom
-        self.thread = threading.Thread(target=self.__handleInput)
+		self.lastUpdate = None
+		self.lastChatroom = self.clientStateInfo.chatroom
+		self.thread = threading.Thread(target=self.__handleInput)
+		#allows the program to close regardless of it this thread is running
+		self.thread.daemon = True
+		self.thread.start()
 
-        #allows the program to close regardless of it this thread is running
-        self.thread.daemon = True
-        self.thread.start()
-		
     def __handleInput(self):
         #Main Program loop
         print "\nWhat do you want to do now?"
-        while True: 
+        while True:
             if self.stop:
                 return
             input_list= raw_input(">> ")
@@ -174,7 +173,7 @@ class InputHandler():
 					print "Success"
 				else:
 					print "An error has occured while attempting to perform the operation"
-            
-     def quit(self):
+
+    def quit(self):
         sys.exit()
-	
+
