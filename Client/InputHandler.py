@@ -94,8 +94,8 @@ class InputHandler():
         return self.output
 			
     def __init__(self, serverWrapper, clientStateInfo):
-		self.wrapper=serverWrapper()
-		self.csi=clientStateInfo()
+		self.wrapper=serverWrapper
+		self.csi=clientStateInfo
 		self.cred=self.csi.credentials
 		
 		self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
