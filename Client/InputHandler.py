@@ -33,25 +33,44 @@ class InputHandler():
             data["Type"]="command"
 
             if data["requestType"] == "join":
-                data["response"] == self.wrapper.join(user_data["userID"],user_data["password"],chatroom)["responseType"]
-                if data["response"] == "Ok":
-                    csi.setCurrentChatroom(chatroom)
+		try:
+			data["response"] = self.wrapper.join(user_data["userID"],user_data["password"],chatroom)["responseType"]
+			if data["response"]:
+			    csi.setCurrentChatroom(chatroom)
+		except ServerWrapperException:
+			data["response"]=False
+                	
 
             elif data["requestType"] == "create":
-                data["response"] == self.wrapper.create(user_data["userID"],user_data["password"],chatroom)["responseType"]
-                if data["response"] == "Ok":
-                    csi.setCurrentChatroom(chatroom)
+		try:
+			data["response"] = self.wrapper.create(user_data["userID"],user_data["password"],chatroom)["responseType"]
+			if data["response"]:
+			    csi.setCurrentChatroom(chatroom)
+		except ServerWrapperException:
+			data["response"]=False
+                	
                     
             elif data["requestType"] == "block":
-                data["response"] == self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
-
+		try:
+            data["response"] = self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
+		except ServerWrapperException:
+			data["response"]=False
+                	
+			
             elif data["requestType"] == "unblock":
-                data["response"] == self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
-
+		try:
+             data["response"] = self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
+		except ServerWrapperException:
+			data["response"]=False
+			
             elif data["requestType"] == "delete":
-                data["response"] == self.wrapper.delete(user_data["userID"],user_data["password"],chatroom)["responseType"]
-                if data["response"] == "Ok":
-                    csi.setCurrentChatroom("general")
+		try:
+			data["response"] = self.wrapper.delete(user_data["userID"],user_data["password"],chatroom)["responseType"]
+			if data["response"]:
+			    csi.setCurrentChatroom("general")
+		except ServerWrapperException:
+			data["response"]=False
+			
         return data
 
     def send_message(self, message, input_list, errors, user_data, chatroom):
@@ -66,8 +85,11 @@ class InputHandler():
         else:
             data["Type"]="normal"
             data["value"] = message + "\033[22m \033[39m"
-            data["response"] == self.wrapper.send(user_data["userID"],user_data["password"],chatroom, data["value"])["responseType"]
-        return data
+		try:
+			data["response"] = self.wrapper.send(user_data["userID"],user_data["password"],chatroom, data["value"])["responseType"]
+		except ServerWrapperException:
+			data["response"]=False
+	return data
 		
 
     def parser(self, input_list, user_data, chatroom):
@@ -99,7 +121,7 @@ class InputHandler():
 		self.cred=self.csi.credentials
 		
 		self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
-		self.system_errors={"Ok": "Success","InvalidCredentials": "Your user credentials are invalid", "ParametersMissing" : "ParametersMissing", "Blocked": "You have been blocked from this chatroom", "ChatroomDoesNotExist": "Sorry, this chatroom does not exist", "InvalidMessage": "Your missage is invalid", "DuplicateChatroom": "This chatroom already exists", "UserDoesNotExist": "This User does not exist", "NotOwner": "You are not the owner of this chatroom, only owners can perform this operation", "UserNotOnList": "This user was never blocked"}
+		#self.system_errors={"Ok": "Success","InvalidCredentials": "Your user credentials are invalid", "ParametersMissing" : "ParametersMissing", "Blocked": "You have been blocked from this chatroom", "ChatroomDoesNotExist": "Sorry, this chatroom does not exist", "InvalidMessage": "Your missage is invalid", "DuplicateChatroom": "This chatroom already exists", "UserDoesNotExist": "This User does not exist", "NotOwner": "You are not the owner of this chatroom, only owners can perform this operation", "UserNotOnList": "This user was never blocked"}
 		#Help text
 		__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 		with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
@@ -141,7 +163,10 @@ class InputHandler():
             elif output["Type"]=="error":
                 print output["value"]
             else:
-			   print self.system_errors[output["response"]]
+				if output["response"]:
+					print "Success"
+				else:
+					print "An error has occured while attempting to perform the operation"
             
     def quit(self):
 		self.stop = True
