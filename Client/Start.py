@@ -18,7 +18,7 @@ class Start():
 			self.helpText=myfile.read()
 		self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
 		
-		self.wrapper=ServerWrapper("location")
+		self.wrapper=ServerWrapper(sys.argv)
 		self.notTryingSignUp=True
 		
 		self.run()
