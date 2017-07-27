@@ -163,10 +163,10 @@ class InputHandler():
             elif output["Type"]=="error":
                 print output["value"]
             else:
-			if output["response"]:
-			   	print "Success"
-			else:
-				print "An error has occured while attempting to perform the operation"
+				if output["response"]:
+					print "Success"
+				else:
+					print "An error has occured while attempting to perform the operation"
             
     def quit(self):
 		self.stop = True
