@@ -51,7 +51,7 @@ class Start():
 				break
 			except (invalidCredentialsException, parametersMissingException) as ex:
 				if type(ex) == invalidCredentialsException:
-					print self.credential_errors["ParametersMissing"]
+					print self.credential_errors["Invalid_pairing"]
 				elif type(ex) == parametersMissingException:
 					print self.credential_errors["ParametersMissing"]
 					
