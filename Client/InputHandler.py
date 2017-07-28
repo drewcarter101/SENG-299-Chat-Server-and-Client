@@ -123,7 +123,6 @@ class InputHandler():
 		__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 		with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
 			self.helpText=myfile.read()
-		self.run()
 
     def set_alias(self, userid, password, newUsername):
         try:

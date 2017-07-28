@@ -2,7 +2,7 @@ from MessageUpdater import MessageUpdater
 from ClientStateInfo import ClientStateInfo
 from ServerWrapper import ServerWrapper
 from Credentials import Credentials
-from InputHandler2 import InputHandler
+from InputHandler import InputHandler
 import socket
 import time
 

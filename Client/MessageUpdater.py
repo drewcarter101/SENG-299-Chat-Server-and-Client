@@ -44,7 +44,7 @@ class MessageUpdater():
             except chatroomDoesNotExistException:
                 self.__exitChatroom()
                 print 'Current chatroom has been deleted. Moving to default chatroom'
-            except ServerWrapperException:
+            except undefinedException:
                 print 'An error has occured while attempting to retrieve messages'
 
             if self.stop:
