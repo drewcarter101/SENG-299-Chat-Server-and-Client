@@ -22,7 +22,6 @@ class Start():
 		self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
 		
 		self.wrapper=ServerWrapper(sys.argv)
-		self.notTryingSignUp=True
 		
 		self.run()
 	
@@ -47,25 +46,34 @@ class Start():
 				continue
 				
 			try:
-				if self.notTryingSignUp:
-					self.userId=self.wrapper.login(tempUser, tempPass) 
-					print "Login complete!"
-					break
-			except ServerWrapperException:
-				if self.notTryingSignUp:
-					print self.credential_errors["Invalid_pairing"]
+				self.userId=self.wrapper.login(tempUser, tempPass) 
+				print "Login complete!"
+				break
+			except (invalidCredentialsException, parametersMissingException) as ex:
+				if type(ex) == invalidCredentialsException:
+					print self.credential_errors["ParametersMissing"]
+				elif type(ex) == parametersMissingException:
+					print self.credential_errors["ParametersMissing"]
+					
+
 				while True:
 					response= raw_input("Press 's' to sign up as a new user with the credentials you enetered or press any key to retry login\n")
 					if response== 's':
-						self.notTryingSignUp=False
 						print "Beginnng sign up process..."
 						try:
 								self.userId = self.wrapper.signup(tempUser, tempPass)
 								print "Sign up complete, you are now logged in"
 								self.done=True
 								break
-						except ServerWrapperException:
-							print "An error has occured while attempting to perform the operation"
+						except (duplicateUsernameException, invalidUsernameException, invalidPasswordException, parametersMissingException) as exx:
+							if type(ex) == duplicateUsernameException:
+								print self.credential_errors["DuplicateUsername"]
+							elif type(ex) == invalidUsernameException:
+								print self.credential_errors["InvalidUsername"]
+							elif type(ex) == invalidPasswordException:
+								print self.credential_errors["InvalidPassword"]
+							else:
+								print self.credential_errors["ParametersMissing"]
 					elif response=="/quit":
 						self.quit()
 					elif response=="/help":
