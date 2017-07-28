@@ -38,17 +38,19 @@ class InputHandler():
                 if data["requestType"] == "join":
         			data["response"] = self.wrapper.join(user_data["userID"],user_data["password"],data["value"])
         			clientStateInfo.chatroom=data["value"]
-    
+        			print "Success"
                 elif data["requestType"] == "create":
         			data["response"] = self.wrapper.create(user_data["userID"],user_data["password"],data["value"])
         			clientStateInfo.chatroom=data["value"]
-    
+        			print "Success"
     
                 elif data["requestType"] == "block":
         			data["response"] = self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,clientStateInfo.chatroom)
+        			print "Success"
 
                 elif data["requestType"] == "unblock":
         			data["response"] = self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,clientStateInfo.chatroom)
+        			print "Success"
     
                 elif data["requestType"] == "delete":
         			data["response"] = self.wrapper.delete(user_data["userID"],user_data["password"],data["value"])
@@ -101,17 +103,18 @@ class InputHandler():
 			except invalidMessageException:
 			    print "The message entered is invalid"
 		    
-		    except blockedException:
-		        print "You have been blocked from the chatroom"
-	        
-	        except parametersMissingException:
-	            print "Missing parameters"
+			except blockedException:
+				print "You have been blocked from the chatroom"
+				
+			except parametersMissingException:
+				print "Missing parameters"
             
-            except invalidCredentialsException:
-                print "Your credentials are invalid"
-            
-            except chatroomDoesNotExistException:
-                print "The chatroom does not exist"
+			except invalidCredentialsException:
+				print "Your credentials are invalid"
+				
+			except chatroomDoesNotExistException:
+				print "The chatroom does not exist"
+
             
 	return data
 
