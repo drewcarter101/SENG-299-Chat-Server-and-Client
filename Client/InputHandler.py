@@ -34,41 +34,52 @@ class InputHandler():
         else:
             data["Type"]="command"
 
-            if data["requestType"] == "join":
-        		try:
+            try:
+                if data["requestType"] == "join":
         			data["response"] = self.wrapper.join(user_data["userID"],user_data["password"],data["value"])
         			clientStateInfo.chatroom=data["value"]
-        		except ServerWrapperException:
-        			data["response"]=False
-
-
-            elif data["requestType"] == "create":
-        		try:
+    
+                elif data["requestType"] == "create":
         			data["response"] = self.wrapper.create(user_data["userID"],user_data["password"],data["value"])
         			clientStateInfo.chatroom=data["value"]
-        		except ServerWrapperException:
-        			data["response"]=False
-
-
-            elif data["requestType"] == "block":
-        		try:
+    
+    
+                elif data["requestType"] == "block":
         			data["response"] = self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,clientStateInfo.chatroom)
-        		except ServerWrapperException:
-        			data["response"]=False
 
-
-            elif data["requestType"] == "unblock":
-        		try:
+                elif data["requestType"] == "unblock":
         			data["response"] = self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,clientStateInfo.chatroom)
-        		except ServerWrapperException:
-        			data["response"]=False
-
-            elif data["requestType"] == "delete":
-        		try:
+    
+                elif data["requestType"] == "delete":
         			data["response"] = self.wrapper.delete(user_data["userID"],user_data["password"],data["value"])
         			clientStateInfo.chatroom=GENERAL_CHATROOM
-        		except ServerWrapperException:
-        			data["response"]=False
+        			
+            except blockedException:
+                print "You have been blocked from the chatroom"
+            
+            except parametersMissingException:
+                print "Missing parameters"
+            
+            except invalidCredentialsException:
+                print "Your credentials are invalid"
+            
+            except chatroomDoesNotExistException:
+                print "The chatroom does not exist"
+            
+            except duplicateChatrooomException:
+                print "This chatroom already exists"
+            
+            except userDoesNotExistException:
+                print "The user does not exist"
+            
+            except notOwnerException:
+                print "You are not the owner of the chatroom"
+            
+            except userNotOnListException:
+                print "The user is not in the chatroom"
+            
+            except invalidChatroomException:
+                print "The chatroom name entered is invalid"
 
         return data
 
@@ -86,8 +97,22 @@ class InputHandler():
 			data["value"] = message + "\033[22m \033[39m"
 			try:
 				data["response"] = self.wrapper.send(user_data["userID"],user_data["password"],clientStateInfo.chatroom, data["value"])
-			except ServerWrapperException:
-				data["response"]=False
+			
+			except invalidMessageException:
+			    print "The message entered is invalid"
+		    
+		    except blockedException:
+		        print "You have been blocked from the chatroom"
+	        
+	        except parametersMissingException:
+	            print "Missing parameters"
+            
+            except invalidCredentialsException:
+                print "Your credentials are invalid"
+            
+            except chatroomDoesNotExistException:
+                print "The chatroom does not exist"
+            
 	return data
 
 
@@ -121,8 +146,6 @@ class InputHandler():
 		self.cred=self.csi.credentials
 		self.chat = chat
 
-		self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
-		#self.system_errors={"Ok": "Success","InvalidCredentials": "Your user credentials are invalid", "ParametersMissing" : "ParametersMissing", "Blocked": "You have been blocked from this chatroom", "ChatroomDoesNotExist": "Sorry, this chatroom does not exist", "InvalidMessage": "Your missage is invalid", "DuplicateChatroom": "This chatroom already exists", "UserDoesNotExist": "This User does not exist", "NotOwner": "You are not the owner of this chatroom, only owners can perform this operation", "UserNotOnList": "This user was never blocked"}
 		#Help text
 		__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 		with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
@@ -131,9 +154,16 @@ class InputHandler():
     def set_alias(self, userid, password, newUsername):
         try:
             tempResponse= self.wrapper.set_alias(userid,password,newUsername)
-            return "success"
-        except ServerWrapperException:
-			print "An error has occured while attempting to perform the operation"
+            return "Name succesfully changed"
+        except (duplicateUsernameException, invalidCredentialsException, parametersMissingException) as exx:
+			if type(ex) == duplicateUsernameException:
+				print "This user name already exists, please enter a valid username"
+			elif type(ex) == invalidUsernameException:
+				print "Usernames are alphanumeric and cannot be blank"
+			elif type(ex) == invalidPasswordException:
+				print "Passwords are alphanumeric and cannot be blank"
+			else:
+				print "Parameters are missing"
 
 
     def peformAction(self, command, value):
@@ -170,9 +200,6 @@ class InputHandler():
                     return
             elif output["Type"]=="error":
                 print output["value"]
-            else:
-				if not output["response"]:
-					print "An error has occured while attempting to perform the operation"
 
     def quit(self):
         self.stop = True
