@@ -7,6 +7,7 @@ import json
 import threading
 import time
 import os
+from Constant import GENERAL_CHATROOM
 from ServerWrapper import *
 import ClientStateInfo as csi
 import Credentials as cred
@@ -17,7 +18,7 @@ init()
 class InputHandler():
 
 
-    def send_command(self, commands, user_data, chatroom):
+    def send_command(self, commands, user_data, clientStateInfo):
         commands=list(filter(None, commands))
         data = {}
 
@@ -35,40 +36,43 @@ class InputHandler():
 
             if data["requestType"] == "join":
         		try:
-        			data["response"] = self.wrapper.join(user_data["userID"],user_data["password"],chatroom)
+        			data["response"] = self.wrapper.join(user_data["userID"],user_data["password"],data["value"])
+        			clientStateInfo.chatroom=data["value"]
         		except ServerWrapperException:
         			data["response"]=False
 
 
             elif data["requestType"] == "create":
         		try:
-        			data["response"] = self.wrapper.create(user_data["userID"],user_data["password"],chatroom)
+        			data["response"] = self.wrapper.create(user_data["userID"],user_data["password"],data["value"])
+        			clientStateInfo.chatroom=data["value"]
         		except ServerWrapperException:
         			data["response"]=False
 
 
             elif data["requestType"] == "block":
         		try:
-        			data["response"] = self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,chatroom)
+        			data["response"] = self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,clientStateInfo.chatroom)
         		except ServerWrapperException:
         			data["response"]=False
 
 
             elif data["requestType"] == "unblock":
         		try:
-        			data["response"] = self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,chatroom)
+        			data["response"] = self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,clientStateInfo.chatroom)
         		except ServerWrapperException:
         			data["response"]=False
 
             elif data["requestType"] == "delete":
         		try:
-        			data["response"] = self.wrapper.delete(user_data["userID"],user_data["password"],chatroom)
+        			data["response"] = self.wrapper.delete(user_data["userID"],user_data["password"],data["value"])
+        			clientStateInfo.chatroom=GENERAL_CHATROOM
         		except ServerWrapperException:
         			data["response"]=False
 
         return data
 
-    def send_message(self, message, input_list, errors, user_data, chatroom):
+    def send_message(self, message, input_list, errors, user_data, clientStateInfo):
         data = {}
 
         if message[0]=="/":
@@ -81,13 +85,13 @@ class InputHandler():
 			data["Type"]="normal"
 			data["value"] = message + "\033[22m \033[39m"
 			try:
-				data["response"] = self.wrapper.send(user_data["userID"],user_data["password"],chatroom, data["value"])
+				data["response"] = self.wrapper.send(user_data["userID"],user_data["password"],clientStateInfo.chatroom, data["value"])
 			except ServerWrapperException:
 				data["response"]=False
 	return data
 
 
-    def parser(self, input_list, user_data, chatroom):
+    def parser(self, input_list, user_data, clientStateInfo):
         self.chatroom_commands =["join","create","block", "unblock", "delete","set_alias", "help", "quit"]
         #linux shell: formats={":b": '\033[1m', "b:": '\033[0m',":u": '\033[4m', "u:": '\033[0m', ":h": '\033[91m', "h:": '\033[0m', ":happy:": u'\U0001f604', ":sad:": u'\U0001F622', ":angry:": u'\U0001F620', ":bored:": u'\U0001F634', ":thumbsup:": u'\U0001F44D', ":thumbsdown:": u'\U0001F44E', ":highfive:": u'\U0000270B'}
         formats={":b": '\033[1m', "b:": '\033[22m ',":u": '__', "u:": '__', ":h": '\033[31m \033[1m', "h:": '\033[22m \033[39m ', ":happy:": ":)", ":sad:": ":(", ":angry:": ">:-(", ":bored:": "(-_-)" , ":thumbsup:": "(^ ^)b", ":thumbsdown:": "(- -)p", ":highfive:": "^_^/"}
@@ -104,9 +108,9 @@ class InputHandler():
 
 
         if command_input is not None:
-            self.output=self.send_command([command_input.group(1), command_input.group(2), command_input.group(3)], user_data, chatroom)
+            self.output=self.send_command([command_input.group(1), command_input.group(2), command_input.group(3)], user_data, clientStateInfo)
         else:
-            self.output= self.send_message(input, input_list, errors, user_data, chatroom)
+            self.output= self.send_message(input, input_list, errors, user_data, clientStateInfo)
 
         return self.output
 
@@ -159,7 +163,7 @@ class InputHandler():
                 return
             input_list= raw_input()
             credObj={"userID": self.cred.userID, "password": self.cred.password}
-            output=self.parser(input_list.split(" "), credObj, self.csi.chatroom)
+            output=self.parser(input_list.split(" "), credObj, self.csi)
             if output["Type"]=="client_command":
                 self.peformAction(output["requestType"], output["value"])
                 if self.stop:
