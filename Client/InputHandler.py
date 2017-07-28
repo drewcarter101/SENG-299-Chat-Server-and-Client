@@ -34,37 +34,37 @@ class InputHandler():
             data["Type"]="command"
 
             if data["requestType"] == "join":
-		try:
-			data["response"] = self.wrapper.join(user_data["userID"],user_data["password"],chatroom)
-		except ServerWrapperException:
-			data["response"]=False
+        		try:
+        			data["response"] = self.wrapper.join(user_data["userID"],user_data["password"],chatroom)
+        		except ServerWrapperException:
+        			data["response"]=False
 
 
             elif data["requestType"] == "create":
-		try:
-			data["response"] = self.wrapper.create(user_data["userID"],user_data["password"],chatroom)
-		except ServerWrapperException:
-			data["response"]=False
+        		try:
+        			data["response"] = self.wrapper.create(user_data["userID"],user_data["password"],chatroom)
+        		except ServerWrapperException:
+        			data["response"]=False
 
 
             elif data["requestType"] == "block":
-		try:
-			data["response"] = self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,chatroom)
-		except ServerWrapperException:
-			data["response"]=False
+        		try:
+        			data["response"] = self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,chatroom)
+        		except ServerWrapperException:
+        			data["response"]=False
 
 
             elif data["requestType"] == "unblock":
-		try:
-			data["response"] = self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,chatroom)
-		except ServerWrapperException:
-			data["response"]=False
+        		try:
+        			data["response"] = self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,chatroom)
+        		except ServerWrapperException:
+        			data["response"]=False
 
             elif data["requestType"] == "delete":
-		try:
-			data["response"] = self.wrapper.delete(user_data["userID"],user_data["password"],chatroom)
-		except ServerWrapperException:
-			data["response"]=False
+        		try:
+        			data["response"] = self.wrapper.delete(user_data["userID"],user_data["password"],chatroom)
+        		except ServerWrapperException:
+        			data["response"]=False
 
         return data
 
