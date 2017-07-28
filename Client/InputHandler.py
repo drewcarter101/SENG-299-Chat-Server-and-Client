@@ -35,34 +35,34 @@ class InputHandler():
 
             if data["requestType"] == "join":
 		try:
-			data["response"] = self.wrapper.join(user_data["userID"],user_data["password"],chatroom)["responseType"]
+			data["response"] = self.wrapper.join(user_data["userID"],user_data["password"],chatroom)
 		except ServerWrapperException:
 			data["response"]=False
 
 
             elif data["requestType"] == "create":
 		try:
-			data["response"] = self.wrapper.create(user_data["userID"],user_data["password"],chatroom)["responseType"]
+			data["response"] = self.wrapper.create(user_data["userID"],user_data["password"],chatroom)
 		except ServerWrapperException:
 			data["response"]=False
 
 
             elif data["requestType"] == "block":
 		try:
-			data["response"] = self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
+			data["response"] = self.wrapper.block(user_data["userID"],user_data["password"],data["value"] ,chatroom)
 		except ServerWrapperException:
 			data["response"]=False
 
 
             elif data["requestType"] == "unblock":
 		try:
-			data["response"] = self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,chatroom)["responseType"]
+			data["response"] = self.wrapper.unblock(user_data["userID"],user_data["password"],data["value"] ,chatroom)
 		except ServerWrapperException:
 			data["response"]=False
 
             elif data["requestType"] == "delete":
 		try:
-			data["response"] = self.wrapper.delete(user_data["userID"],user_data["password"],chatroom)["responseType"]
+			data["response"] = self.wrapper.delete(user_data["userID"],user_data["password"],chatroom)
 		except ServerWrapperException:
 			data["response"]=False
 
@@ -81,7 +81,7 @@ class InputHandler():
 			data["Type"]="normal"
 			data["value"] = message + "\033[22m \033[39m"
 			try:
-				data["response"] = self.wrapper.send(user_data["userID"],user_data["password"],chatroom, data["value"])["responseType"]
+				data["response"] = self.wrapper.send(user_data["userID"],user_data["password"],chatroom, data["value"])
 			except ServerWrapperException:
 				data["response"]=False
 	return data
@@ -126,8 +126,11 @@ class InputHandler():
 		self.run()
 
     def set_alias(self, userid, password, newUsername):
-        tempResponse= self.wrapper.set_alias(userid,password,newUsername)["responseType"]
-        return self.credential_errors[tempResponse]
+        try:
+            tempResponse= self.wrapper.set_alias(userid,password,newUsername)
+            return "success"
+        except ServerWrapperException:
+			print "An error has occured while attempting to perform the operation"
 
 
     def peformAction(self, command, value):
