@@ -157,7 +157,7 @@ class InputHandler():
         while True:
             if self.stop:
                 return
-            input_list= raw_input(">> ")
+            input_list= raw_input()
             credObj={"userID": self.cred.userID, "password": self.cred.password}
             output=self.parser(input_list.split(" "), credObj, self.csi.chatroom)
             if output["Type"]=="client_command":
@@ -167,9 +167,7 @@ class InputHandler():
             elif output["Type"]=="error":
                 print output["value"]
             else:
-				if output["response"]:
-					print "Success"
-				else:
+				if !output["response"]:
 					print "An error has occured while attempting to perform the operation"
 
     def quit(self):
