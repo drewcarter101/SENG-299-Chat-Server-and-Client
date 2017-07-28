@@ -27,6 +27,7 @@ class Start():
 		self.run()
 	
 	def run(self):
+		self.done=False
 		print "Welcome! Type '/quit' to exit or '/help' for assistance."
 		print "Login/sign-up below:\n"
 		#login/signup screen
@@ -61,6 +62,7 @@ class Start():
 						try:
 								self.userId = self.wrapper.signup(tempUser, tempPass)
 								print "Sign up complete, you are now logged in"
+								self.done=True
 								break
 						except ServerWrapperException:
 							print "An error has occured while attempting to perform the operation"
@@ -69,7 +71,11 @@ class Start():
 					elif response=="/help":
 						print self.helpText
 						continue
-				break
+					else:
+						break
+				if self.done:
+					break
+				
 		
 		self.cred= Credentials(self.userId, tempPass)
 		self.chat=Chat(self.cred, self.wrapper)
