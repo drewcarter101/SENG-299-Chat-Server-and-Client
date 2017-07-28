@@ -139,6 +139,7 @@ class InputHandler():
         elif command== "help":
             print self.helpText
         elif command =="quit":
+            print "quitting..."
             self.quit()
         return
 
@@ -161,9 +162,9 @@ class InputHandler():
             credObj={"userID": self.cred.userID, "password": self.cred.password}
             output=self.parser(input_list.split(" "), credObj, self.csi.chatroom)
             if output["Type"]=="client_command":
-				self.peformAction(output["requestType"], output["value"])
-				if self.stop:
-					return
+                self.peformAction(output["requestType"], output["value"])
+                if self.stop:
+                    return
             elif output["Type"]=="error":
                 print output["value"]
             else:
@@ -173,5 +174,6 @@ class InputHandler():
 					print "An error has occured while attempting to perform the operation"
 
     def quit(self):
+        self.stop = True
         sys.exit()
 
