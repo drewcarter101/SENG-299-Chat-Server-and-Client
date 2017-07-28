@@ -167,7 +167,7 @@ class InputHandler():
             elif output["Type"]=="error":
                 print output["value"]
             else:
-				if !output["response"]:
+				if not output["response"]:
 					print "An error has occured while attempting to perform the operation"
 
     def quit(self):
