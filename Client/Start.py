@@ -36,12 +36,14 @@ class Start():
 				self.quit()
 			elif tempUser=="/help":
 				print self.helpText
+				continue
 			
 			tempPass=raw_input("Please enter your password, if your account does not exist, you will be prompted to sign up: " + self.credential_errors["InvalidPassword"]+ "\n")
 			if tempPass=="/quit":
 				self.quit()
 			elif tempPass=="/help":
 				print self.helpText
+				continue
 				
 			try:
 				if self.notTryingSignUp:
@@ -51,20 +53,23 @@ class Start():
 			except ServerWrapperException:
 				if self.notTryingSignUp:
 					print self.credential_errors["Invalid_pairing"]
-				response= raw_input("Press 's' to sign up as a new user with the credentials you enetered or press any key to retry login\n")
-				if response== 's':
-					self.notTryingSignUp=False
-					print "Beginnng sign up process..."
-					try:
-							self.userId = self.wrapper.signup(tempUser, tempPass)
-							print "Sign up complete, you are now logged in"
-							break
-					except ServerWrapperException:
-						print "An error has occured while attempting to perform the operation"
-				elif response=="/quit":
-					self.quit()
-				elif response=="/help":
-					print self.helpText
+				while True:
+					response= raw_input("Press 's' to sign up as a new user with the credentials you enetered or press any key to retry login\n")
+					if response== 's':
+						self.notTryingSignUp=False
+						print "Beginnng sign up process..."
+						try:
+								self.userId = self.wrapper.signup(tempUser, tempPass)
+								print "Sign up complete, you are now logged in"
+								break
+						except ServerWrapperException:
+							print "An error has occured while attempting to perform the operation"
+					elif response=="/quit":
+						self.quit()
+					elif response=="/help":
+						print self.helpText
+						continue
+				break
 		
 		self.cred= Credentials(self.userId, tempPass)
 		self.chat=Chat(self.cred, self.wrapper)
