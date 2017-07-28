@@ -19,7 +19,9 @@ class Start():
 		with open(os.path.join(__location__, "helpMsg.txt")) as myfile:
 			self.helpText=myfile.read()
 			
-		self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", "Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", "ParametersMissing" : "ParametersMissing"}
+		self.credential_errors={"Ok": "Success","InvalidUsername": "Usernames are alphanumeric and cannot be blank", "InvalidPassword": "Passwords are alphanumeric and cannot be blank", 
+		"Invalid_pairing": "Either the password or username entered is incorrect", "DuplicateUsername": "This user name already exists, please enter a valid username", 
+		"ParametersMissing" : "Blank entries are not allowed"}
 		
 		self.wrapper=ServerWrapper(sys.argv)
 		
