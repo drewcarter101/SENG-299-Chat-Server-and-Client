@@ -51,11 +51,13 @@ class Start():
 				self.userId=self.wrapper.login(tempUser, tempPass) 
 				print "Login complete!"
 				break
-			except (invalidCredentialsException, parametersMissingException) as ex:
+			except (invalidCredentialsException, parametersMissingException, ServerWrapperException) as ex:
 				if type(ex) == invalidCredentialsException:
 					print self.credential_errors["Invalid_pairing"]
 				elif type(ex) == parametersMissingException:
 					print self.credential_errors["ParametersMissing"]
+				else:
+					print "Error occured while trying to perform operation"
 					
 
 				while True:
@@ -67,13 +69,15 @@ class Start():
 								print "Sign up complete, you are now logged in"
 								self.done=True
 								break
-						except (duplicateUsernameException, invalidUsernameException, invalidPasswordException, parametersMissingException) as exx:
+						except (duplicateUsernameException, invalidUsernameException, invalidPasswordException, parametersMissingException, ServerWrapperException) as exx:
 							if type(ex) == duplicateUsernameException:
 								print self.credential_errors["DuplicateUsername"]
 							elif type(ex) == invalidUsernameException:
 								print self.credential_errors["InvalidUsername"]
 							elif type(ex) == invalidPasswordException:
 								print self.credential_errors["InvalidPassword"]
+							elif type(ex) == ServerWrapperException:
+								print "Error occured while trying to perform operation"
 							else:
 								print self.credential_errors["ParametersMissing"]
 					elif response=="/quit":

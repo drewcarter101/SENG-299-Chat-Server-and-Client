@@ -55,6 +55,7 @@ class InputHandler():
                 elif data["requestType"] == "delete":
         			data["response"] = self.wrapper.delete(user_data["userID"],user_data["password"],data["value"])
         			clientStateInfo.chatroom=GENERAL_CHATROOM
+        			print "Success"
         			
             except blockedException:
                 print "You have been blocked from the chatroom"
@@ -82,6 +83,8 @@ class InputHandler():
             
             except invalidChatroomException:
                 print "The chatroom name entered is invalid"
+            except ServerWrapperException:
+                print "Error occured while trying to perform operation"
 
         return data
 
@@ -114,6 +117,9 @@ class InputHandler():
 				
 			except chatroomDoesNotExistException:
 				print "The chatroom does not exist"
+				
+			except ServerWrapperException:
+			    print "Error occured while trying to perform operation"
 
             
 	return data
@@ -121,7 +127,7 @@ class InputHandler():
 
     def parser(self, input_list, user_data, clientStateInfo):
         self.chatroom_commands =["join","create","block", "unblock", "delete","set_alias", "help", "quit"]
-        #linux shell: formats={":b": '\033[1m', "b:": '\033[0m',":u": '\033[4m', "u:": '\033[0m', ":h": '\033[91m', "h:": '\033[0m', ":happy:": u'\U0001f604', ":sad:": u'\U0001F622', ":angry:": u'\U0001F620', ":bored:": u'\U0001F634', ":thumbsup:": u'\U0001F44D', ":thumbsdown:": u'\U0001F44E', ":highfive:": u'\U0000270B'}
+        #formats={":b": '\033[1m', "b:": '\033[0m',":u": '\033[4m', "u:": '\033[0m', ":h": '\033[91m', "h:": '\033[0m', ":happy:": u'\U0001f604', ":sad:": u'\U0001F622', ":angry:": u'\U0001F620', ":bored:": u'\U0001F634', ":thumbsup:": u'\U0001F44D', ":thumbsdown:": u'\U0001F44E', ":highfive:": u'\U0000270B'}
         formats={":b": '\033[1m', "b:": '\033[22m ',":u": '__', "u:": '__', ":h": '\033[31m \033[1m', "h:": '\033[22m \033[39m ', ":happy:": ":)", ":sad:": ":(", ":angry:": ">:-(", ":bored:": "(-_-)" , ":thumbsup:": "(^ ^)b", ":thumbsdown:": "(- -)p", ":highfive:": "^_^/"}
         errors={"invalid_command" :"'{}' does not exist, Type /help for a list of chat commands", "invalid_useOf_command" :"Invalid arguments for '{}', Type /help for a list of chat commands"}
         input=" ".join([formats.get(item, item) for item in input_list])
@@ -158,13 +164,15 @@ class InputHandler():
         try:
             tempResponse= self.wrapper.set_alias(userid,password,newUsername)
             return "Name succesfully changed"
-        except (duplicateUsernameException, invalidCredentialsException, parametersMissingException) as exx:
+        except (duplicateUsernameException, invalidCredentialsException, parametersMissingException, ServerWrapperException) as exx:
 			if type(ex) == duplicateUsernameException:
 				print "This user name already exists, please enter a valid username"
 			elif type(ex) == invalidUsernameException:
 				print "Usernames are alphanumeric and cannot be blank"
 			elif type(ex) == invalidPasswordException:
 				print "Passwords are alphanumeric and cannot be blank"
+			elif type(ex) == ServerWrapperException:
+			    print "Error occured while trying to perform operation"
 			else:
 				print "Parameters are missing"
 
@@ -175,7 +183,7 @@ class InputHandler():
         elif command== "help":
             print self.helpText
         elif command =="quit":
-            print "quitting..."
+            print "Exiting program"
             self.quit()
         return
 
