@@ -12,7 +12,7 @@ from Credentials import *
 
 class Start():
 	
-	
+	## Constructor initiates variables and starts program
 	def __init__(self):
 		#Help text
 		__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -27,11 +27,11 @@ class Start():
 		
 		self.run()
 	
+	## Starts login and sign up process and afterwards begins program
 	def run(self):
 		self.done=False
 		print "Welcome! Type '/quit' to exit or '/help' for assistance."
 		print "Login/sign-up below:\n"
-		#login/signup screen
 		while True:
 			tempUser=raw_input("Please enter a username: " + self.credential_errors["InvalidUsername"]+ "\n")
 			if tempUser=="/quit":
@@ -95,6 +95,7 @@ class Start():
 		self.chat=Chat(self.cred, self.wrapper)
 		self.chat.run()
 		
+	## Quits program
 	def quit(self):
 		sys.exit()
 		
