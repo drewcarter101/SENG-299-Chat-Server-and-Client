@@ -155,6 +155,7 @@ class ServerWrapper:
     def receive_and_parse(self,data):
         try:
             s = socket.socket()
+            s.settimeout(10)
             requestString = json.dumps(data)
 
             host = socket.gethostname()
