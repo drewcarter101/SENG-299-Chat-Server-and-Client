@@ -196,7 +196,7 @@ class InputHandler():
         while True:
             if self.stop:
                 return
-            input_list= raw_input()[:200]
+            input_list= raw_input().strip()[:200]
             credObj={"userID": self.cred.userID, "password": self.cred.password}
             output=self.parser(input_list.split(" "), credObj, self.csi)
             if output["Type"]=="error":

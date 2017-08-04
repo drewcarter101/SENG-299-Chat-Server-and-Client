@@ -33,14 +33,14 @@ class Start():
 		print "Welcome! Type '/quit' to exit or '/help' for assistance."
 		print "Login/sign-up below:\n"
 		while True:
-			tempUser=raw_input("Please enter a username: " + self.credential_errors["InvalidUsername"]+ "\n")
+			tempUser=raw_input("Please enter a username: " + self.credential_errors["InvalidUsername"]+ "\n").strip()
 			if tempUser=="/quit":
 				self.quit()
 			elif tempUser=="/help":
 				print self.helpText
 				continue
 			
-			tempPass=raw_input("Please enter your password, if your account does not exist, you will be prompted to sign up: " + self.credential_errors["InvalidPassword"]+ "\n")
+			tempPass=raw_input("Please enter your password, if your account does not exist, you will be prompted to sign up: " + self.credential_errors["InvalidPassword"]+ "\n").strip()
 			if tempPass=="/quit":
 				self.quit()
 			elif tempPass=="/help":
@@ -61,7 +61,7 @@ class Start():
 					
 
 				while True:
-					response= raw_input("Press 's' to sign up as a new user with the credentials you enetered or press any key to retry login\n")
+					response= raw_input("Press 's' to sign up as a new user with the credentials you enetered or press any key to retry login\n").strip()
 					if response== 's':
 						print "Beginnng sign up process..."
 						try:
