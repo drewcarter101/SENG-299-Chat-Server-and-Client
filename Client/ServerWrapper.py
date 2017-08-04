@@ -158,8 +158,7 @@ class ServerWrapper:
             s.settimeout(10)
             requestString = json.dumps(data)
 
-            host = socket.gethostname()
-            #host=socket.gethostbyname('localhost')
+            host=socket.gethostbyaddr(location)
             port = 9321
 
             s.connect((host, port))
