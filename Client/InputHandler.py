@@ -192,11 +192,11 @@ class InputHandler():
 
     # Recieves input from terminal window
     def __handleInput(self):
-        print "\nWhat do you want to do now?"
+        print "\nYou are now in the general chatroom, enjoy!"
         while True:
             if self.stop:
                 return
-            input_list= raw_input()
+            input_list= raw_input().strip()[:200]
             credObj={"userID": self.cred.userID, "password": self.cred.password}
             output=self.parser(input_list.split(" "), credObj, self.csi)
             if output["Type"]=="error":
