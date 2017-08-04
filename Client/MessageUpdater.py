@@ -5,7 +5,7 @@ from Constant import GENERAL_CHATROOM
 
 class MessageUpdater():
 
-    __DELAY = .1
+    __DELAY = .5
 
     def __init__(self, serverWrapper, clientStateInfo, Chat):
         self.serverWrapper = serverWrapper
