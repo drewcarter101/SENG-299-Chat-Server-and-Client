@@ -192,7 +192,7 @@ class InputHandler():
 
     # Recieves input from terminal window
     def __handleInput(self):
-        print "\nWhat do you want to do now?"
+        print "\nYou are now in the general chatroom, enjoy!"
         while True:
             if self.stop:
                 return
