@@ -90,7 +90,8 @@ class Start():
 				if self.done:
 					break
 				
-		
+		print self.helpText
+		print "This guide can be accessed again with the /help command\n"
 		self.cred= Credentials(self.userId, tempPass)
 		self.chat=Chat(self.cred, self.wrapper)
 		self.chat.run()

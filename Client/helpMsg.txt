@@ -1,4 +1,5 @@
 
+List of commands and their usage:
 Main Commands:
 1) /help ------------------- Lists chat commands
 2) /join [chatroom_name] ----Join an existing chat room, exclude square brackets
