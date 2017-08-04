@@ -38,7 +38,7 @@ class Server:
     def start(self):
         s = socket.socket()
         host = socket.gethostname()
-
+        print 'Starting Server'
         s.bind((host,self.PORT))
         s.listen(100)
 
