@@ -29,5 +29,6 @@ class DBException(Exception):
 
 
 from DBHandlerInMem import DBHandlerInMem
+from DBHandlerImpl import DBHandlerImpl
 
-dbHandler = DBHandlerInMem()
+dbHandler = DBHandlerImpl()
